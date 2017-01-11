@@ -20,11 +20,15 @@ $(function () {
             var searchKey = $('.searchKey').val();
             var tpl = map.tpl.split('#')[0];
             var type = 1;
+            var id= null;
             switch (tpl) {
                 case 'reportStore':
                     type = 1;
                     break;
                 case 'reportCustomer':
+                	if(map.id!=null){
+                		id = map.id.split('#')[0];
+            		}
                     type = 2;
                     break;
                 case 'reportEmp':
@@ -60,24 +64,84 @@ $(function () {
 				case 'reportEmpComDetail':
 					type = 13;
 					break;
-                case 'reportBrand':
-                    type = 23;
+				case 'reportArrearDetail':
+					type = 14;
+					break;
+				case 'areaReportEvalute':
+					type = 15;
+					break;
+				case 'reportRcommission':
+					type = 16;
+					break;
+				case 'reportCustomerArrive':
+					type = 17;
+					break;
+				case 'reportCustomerSource':
+					type = 18;
+					break;
+				
+				case 'reportStoreCoupons':
+					type = 19;
+					break;
+                case 'reportStoreCouponsDetail':
+                	id = map.couponId.split('#')[0];
+                    type = 20;
                     break;
-                case 'reportBrandCategory':
+				case 'reportTakeGoods':
+					type = 21;
+					break;
+                case 'reportTakeGoodsDetail':
+                	id = map.productId;
+                    type = 22;
+                    break;
+                case 'areaReportBusiness':
+                    type = 23;
+                    break;       
+                case 'areaReportCategory':
+                	if(map.id!=null){
+                		id = map.id.split('#')[0];
+                	}
                     type = 24;
                     break;
-                case 'reportBrandProduct':
+                case 'areaReportProduct':
+                	if(map.id!=null){
+                		id = map.id.split('#')[0];
+                	}
                     type = 25;
                     break;
-                case 'reportBrandCard':
+                case 'areaReportCard':
                     type = 26;
+                    break;
+				case 'reportBrandCoupons':
+					type = 27;
+					break;
+					
+				case 'ReportBrandPickUpManage':
+					type = 28;
+					break;
+				case 'reportRefund':
+					type = 29;
+					break;
+				case 'reportAreaRefund':
+					type =30;
+					break;
+					
+				case 'reportCardDetail':
+					type =31;
+					break;
+					
+                case 'reportNextCategory':
+                	id = map.id.split('#')[0];
+                    type = 32;
                     break;
                 default:
                     type = 0;
                     break;
             }
-
-
+            var isFirst = '1';
+            if(map.isFirst!=undefined){
+            	isFirst = (map.isFirst.slice(0,1) === "0" ? '0' : '1');
+            }
             var reportDto = {
                 'storeId': (map.storeId === undefined ? '' : map.storeId),
                 'brandId': (map.brandId === undefined ? '' : map.brandId),
@@ -85,7 +149,17 @@ $(function () {
                 'start': start,
                 'end': end,
                 'keyWord': searchKey,
-                'customerId': (map.customerId === undefined ? '' : map.customerId)
+                'customerId': (map.customerId === undefined ? '' : map.customerId),
+                'type':(map.type === undefined ? '' : map.type),
+                'orgId':(map.organizationId === undefined ? '' : map.organizationId),
+                'eValue':(map.eValue === undefined ? '' : map.eValue),
+                "isFirst":isFirst,
+                "cosmeticsOnly":(map.cosmeticsOnly === undefined ? '' : map.cosmeticsOnly),
+                "id":id,
+                "organizationId":(map.organizationId== undefined ? '' : map.organizationId),
+                "productId":(map.productId== undefined ? '' : map.productId),
+                "bcOnlly":(map.bcOnlly== undefined ? '' : map.bcOnlly),
+                "name":(map.name== undefined ? '' : map.name.split('#')[0])
             }
 
             var data = {
