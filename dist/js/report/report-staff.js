@@ -659,29 +659,34 @@
 	var customerTransOrdersReportView = BaseView.extend({ // 客户临时转店消费记录
 		template: _.template($('#customerTransOrdersReport-tpl').html()),
 		events: {
-			'tap tbody tr': 'showDetail',
+			'tap tbody tr': 'showDetailBtn',
 			'tap thead .sortable': 'sortField',
 		},
-		showDetail: function (e) {
-			if (e.currentTarget.tagName.toLowerCase() == 'tr') {
-				var id = $(e.currentTarget).data('id');
-				if (!id) {
-					return;
-				}
-				var start = $('.startTime').val();
-				var end = $('.endTime').val();
-				var name = $(e.currentTarget).data('name') + "（" + $(e.currentTarget).data('store') + "）";
-				var hash = '?organizationId=' + $(e.currentTarget).data('organizationid') + '&tpl=reportTakeGoodsDetail&productId=' + id + "&start=" + start + "&end=" + end;
-				var href = window.location.href.substring(0, window.location.href.indexOf('?')) + hash;
-				if (!device().isMobile) {
-					window.location.href = href;
+		showDetailBtn: function (e) {
+			var start, end;
+			var customerId = $(e.currentTarget).data("id");
+			var storeId = $(e.currentTarget).data("storeid");
+			var time = $(e.currentTarget).data('time');
+			start = end = time.substring(0,time.indexOf(" "));
+			if (!customerId) {
+				return;
+			}
+			var hash = 'storeId=' + storeId + '&customerId=' + customerId + "&start=" + start + "&end=" + end + '&tpl=';
+			var uri = window.location.href.substring(0, window.location.href.indexOf('?')) + '?';
+			window.JsCallNativeBridge('openReportDetailView', [{
+				title: '销售详情',
+				url: uri + (hash + 'reportMarketDetail')
+			}, {
+				title: '消耗详情',
+				url: uri + (hash + 'reportWorkDetail')
+			}]); // 调用原生
+			if (e.target.nodeName.toLowerCase() === 'a') {
+				if ($(e.target).data().role === 'sale') {
+					window.location.href = uri + (hash + 'reportMarketDetail');
 				} else {
-					window.JsCallNativeBridge('openReportDetailView', [{
-						title: name,
-						url: href
-					}]); // 调用原生
-					// window.location.href =   href;
+					window.location.href = uri + (hash + 'reportWorkDetail');
 				}
+
 			}
 		}
 	});

@@ -2836,12 +2836,12 @@
                     <th>销售金额</th>
                     <th>消耗金额</th>
                     <th>转店日期</th>
-                    <th td-more text-center></th>
+                    <th style="text-align:center;width:30px !important;min-width:30px !important;max-width:40px;"></th>
                 </tr>
             </thead>
             <tbody id="tb" class="tbody">
                 <%data.map(function(el,index){%>
-                    <tr data-id="<%=el.productId%>" data-name="<%=el.productName%>" data-organizationId="<%=el.organizationId%>" data-store="<%=el.organizationName%>">
+                    <tr data-id="<%=el.customerId%>" data-storeid="<%=el.targetOrgId%>" data-time="<%=el.transTime%>">
                         <td class="text">
                             <%=el.memberNo%>
                         </td>
@@ -2863,7 +2863,14 @@
                         <td class="text">
                             <%=el.transTime%>
                         </td>
-                        <td text-center td-more><i class="iconfont">&#xe6a7;</i> </td>
+                        <%if(device().isMobile){%>
+                            <td style="text-align:center;width:30px !important;min-width:30px !important;max-width:40px;"><i class="iconfont">&#xe6a7;</i></td>
+                        <%}else{%>
+                            <td class="text"><a  class="emp-detailBtn" data-role="sale" style="color: #bca173;display: inline-block;border: 1px solid #886B3B;border-radius: 4px;padding: 2px 4px;">销售详情<i class="iconfont">&#xe629;</i></a>
+                                <a
+                                        class="emp-detailBtn" data-role="consume" style="color: #bca173;display: inline-block;border: 1px solid #886B3B;border-radius: 4px;padding: 2px 4px;margin-left: 6px;">消耗详情<i class="iconfont">&#xe629;</i></a>
+                            </td>
+                        <%}%>
                     </tr>
                     <%});%>
             </tbody>
