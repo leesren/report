@@ -267,6 +267,8 @@
                     <th>消耗业绩占比</th>
                     <th class="sortable" data-sort="consumeCom">消耗提成</th>
                     <th class="sortable" data-sort="manualCom">手工工资</th>
+                    <th class="sortable" data-sort="appointManualCom">指定业绩</th>
+                    <th class="sortable" data-sort="noAppointManualCom">非指定业绩</th>
                     <th class="sortable" data-sort="sumCom">提成合计</th>
                     <th class="">所属门店</th>
                     <th style="text-align:center;width:60px !important;min-width:60px !important;max-width:240px;">备注</th>
@@ -315,6 +317,12 @@
                         </td>
                         <td class="num">
                             <%=miliFormat(((el.manualCom-0).toFixed(2)-0))%>
+                        </td>
+                        <td class="num">
+                            <%=miliFormat(((el.appointManualCom-0).toFixed(2)-0))%>
+                        </td>
+                        <td class="num">
+                            <%=miliFormat(((el.noAppointManualCom-0).toFixed(2)-0))%>
                         </td>
                         <td class="num">
                             <%=miliFormat(((el.sumCom-0).toFixed(2)-0))%>
@@ -527,12 +535,13 @@
                     <th class="sortable" data-sort="consume">消耗业绩</th>
                     <th class="sortable" data-sort="commission">消耗提成</th>
                     <th class="sortable" data-sort="extrawage">手工工资</th>
+                    <th>是否指定</th>
                     <th>备注</th>
                 </tr>
             </thead>
             <tbody id="tb" class="tbody">
-                <%data.map(function(el,index){%>
-                    <tr>
+                <%data.map(function(el,index){var experienceCard=(el.isAppoint)==1?'experienceCard':'';%>
+                    <tr class="<%=experienceCard%>">
                         <td class="text first-coloum-flag">
                             <%=el.eName%>
                         </td>
@@ -571,6 +580,9 @@
                         </td>
                         <td class="num">
                             <%=miliFormat(((el.extrawage-0).toFixed(2)-0))%>
+                        </td>
+                        <td class="text">
+                            <%=el.isAppoint==1 ? '是' : '否'%>
                         </td>
                         <td class="text">-</td>
                     </tr>
