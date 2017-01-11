@@ -1,0 +1,123 @@
+.flexbox() {
+  // 2009 spec
+  // tweener
+  display: -moz-flexbox;
+  display: -ms-flexbox; 
+  display: -o-flexbox;
+
+  // new spec
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+}
+
+// flex //
+.flex(@flex) {
+  // -webkit-box-flex: @flex;
+  -moz-box-flex: @flex;
+  -o-box-flex: @flex;
+  -webkit-flex: @flex;
+  -moz-flex: @flex;
+  -ms-flex: @flex;
+  -o-flex: @flex;
+  flex: @flex;   
+}
+@flexvalue: 1 1 auto;
+// flex-derection = box-orient + box-direction
+// row | row-reverse | column | column-reverse
+.flex-direction(@direction) {
+  -webkit-flex-direction: @direction;
+  -moz-flex-direction: @direction;
+  -ms-flex-direction: @direction;
+  -o-flex-direction: @direction;
+  flex-direction: @direction;
+}
+
+// order //
+.order(@order) {
+  -webkit-box-ordinal-group: @order + 1;
+  -moz-box-ordinal-group: @order + 1;
+  -o-box-ordinal-group: @order + 1;
+  -webkit-order: @order;
+  -moz-order: @order;
+  -ms-order: @order;
+  -o-order: @order;
+  order: @order;
+}
+
+
+//justify content//
+
+//2009 property is box-pack
+//2009 property does not support a method for space-around
+
+// 主轴上的对齐方式 flex-start | flex-end | center | space-between | space-around
+.justify-content(@justify-method) {
+    -webkit-justify-content: @justify-method;
+    -moz-justify-content: @justify-method;
+    -ms-justify-content: @justify-method;
+    -o-justify-content: @justify-method;
+    justify-content: @justify-method;
+}
+
+// align-items属性定义项目在交叉轴上如何对齐。 flex-start | flex-end | center | baseline | stretch;
+.align-items(@align-method){
+   -moz-box-align:  @align-method;
+   -webkit-box-align: @align-method;
+   -ms-flex-align: @align-method;
+   -webkit-align-items: @align-method;
+   align-items: @align-method;
+}
+// nowrap | wrap | wrap-reverse;
+.flex-wrap(@wrap-method){
+   -ms-flex-wrap:@wrap-method;
+   -moz-flex-wrap:@wrap-method;
+   -webkit-flex-wrap:@wrap-method;
+   flex-wrap:@wrap-method;
+}
+// flex-flow属性是flex-direction属性和flex-wrap属性的简写形式，默认值为row nowrap。
+// <flex-direction> || <flex-wrap>;
+.flex-flow(@v){
+   -ms-flex-flow:@v;
+   -moz-flex-flow:@v;
+   -webkit-flex-flow:@v;
+   flex-flow:@v;
+}
+
+.align-self(@value){
+    -webkit-align-self:@value;
+    -ms-flex-item-align:@value;
+    lign-self:@value
+}
+
+//===========================================================
+//  http://stackoverflow.com/questions/15662578/flexible-box-model-display-flex-box-flexbox by RubyLouvre
+.user-select(){
+   -webkit-touch-callout: none;
+   -webkit-user-select: none;
+   -khtml-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+   user-select: none;
+}
+.fixed-width(@value){
+    width:@value;
+    min-width:@value;
+    max-width:@value;
+}
+
+
+.box-sizing(@value){
+   -webkit-box-sizing: @value; /* Safari/Chrome, other WebKit */
+   -moz-box-sizing:@value;    /* Firefox, other Gecko */
+   box-sizing: @value;         /* Opera/IE 8+ */
+}
+
+.transform(@value){
+       transform:@value;
+       -moz-transform:@value;
+       -webkit-transform:@value;
+       -ms-transform:@value;
+}

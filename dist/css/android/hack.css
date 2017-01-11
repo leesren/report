@@ -1,0 +1,126 @@
+/*
+start
+m.page3.html 饼图 ，年月导航栏
+*/
+
+.proportion-box nav{
+	display: table;
+	width: 100%;
+}
+.proportion-box .item{
+	display: table-cell;
+}
+.p3-store-zhu-chart .chart-nav .item{
+	text-align: center;
+}
+/*
+end
+m.page3.html 饼图 ，年月导航栏
+*/
+
+
+/*
+start
+list-tuikuan.html 退款列表，年月导航栏
+*/
+
+.refound-box nav{
+	display: table;
+	width: 100%;
+}
+.refound-box nav .item{
+	display: table-cell;
+}
+
+/*end*/
+
+/*
+start
+m.page2.html 
+*/
+
+/*/////////////////////////////start 销售详情*/
+.detail .more{
+	display: table;
+	width: 100%;
+}
+.detail .more a{
+	display: table-cell;
+	text-align: center;
+}
+/*/////////////////////////////end 销售详情*/
+
+
+/*end*/
+
+
+/*
+start
+m.page1.html 
+*/
+
+
+.p1-body .item-box .column4 .item,.p1-body .item-box .column3 .item{
+	display: block;
+	width: 100%;
+}
+.p1-body .item-box .column4 span:first-child{
+	display: inline-block;
+	width: 12%;
+}
+.p1-body .item-box .column4 span{
+	display: inline-block;
+	width: 42%;
+	max-width: 42%;
+}
+.p1-body .item-box .column4 .sellNumber{
+	display: inline-block;
+	width: 14%;
+}
+.p1-body .item-box .column4 .title span:last-child{
+	display: inline-block;
+	width: 20%;
+	max-height: 20%;
+	overflow: hidden;
+}
+.p1-body .item-box .column4 span:last-child{
+	display: inline-block;
+	width: 20%;
+	max-height: 20%;
+	overflow: hidden;
+}
+
+
+
+.p1-body .item-box .column3 span:first-child{
+	display: inline-block;
+	width: 20%;
+}
+.p1-body .item-box .column3 span{
+	display: inline-block;
+	width: 36%;
+	max-width: 36%;
+}
+.p1-body .item-box .column3 .sellNumber{
+	display: inline-block;
+	width: 14%;
+}
+.p1-body .item-box .column3 .title span:last-child{
+	display: inline-block;
+	width:30%;
+	max-height: 30%;
+	overflow: hidden;
+}
+.p1-body .item-box .column3 span:last-child{
+	display: inline-block;
+	width: 30%;
+	max-height: 30%;
+	overflow: hidden;
+}
+/*
+end
+m.page1.html 
+*/
+
+
+
