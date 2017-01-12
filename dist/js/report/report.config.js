@@ -404,6 +404,7 @@
 			url: uri + 'api/doReport/reportWorkDetail',
 			body: {
 				'data': {
+					'brandId': (map.organizationId === undefined ? '' : map.organizationId),
 					'storeId': (map.storeId === undefined ? '' : map.storeId),
 					'empId': (map.empId === undefined ? '' : map.empId),
 					'customerId': (map.customerId === undefined ? '' : map.customerId),
@@ -416,11 +417,15 @@
 					'size': 20
 				}
 			},
-			summary: {
+			summary: map.organizationId === undefined ? {
 				key: ['门店消耗业绩总额', '消耗业绩', '消耗提成', '手工工资', '赠送消耗'],
 				value: ['storeConsume', 'workEmpList-consumeAch', 'workEmpList-commission', 'workEmpList-extrawage'],
 				serverValue: ['sumConsume', 'sumCA', 'sumCC', 'sumEx', 'sumGiftConsume']
 
+			}:{
+				key: [],
+				value: [],
+				serverValue: []
 			},
 			searchConfig: {
 				showKeyWord: true,
@@ -435,6 +440,7 @@
 			url: uri + 'api/doReport/reportMarketDetail',
 			body: {
 				'data': {
+					'brandId': (map.organizationId === undefined ? '' : map.organizationId),
 					'storeId': (map.storeId === undefined ? '' : map.storeId),
 					'empId': (map.empId === undefined ? '' : map.empId),
 					'customerId': (map.customerId === undefined ? '' : map.customerId),
@@ -446,10 +452,14 @@
 					'size': 20
 				}
 			},
-			summary: {
+			summary: map.organizationId === undefined ? {
 				key: ['门店销售业绩总额', '实收总额', '现金', '银联', '销售提成总额'],
 				value: ['sales', 'realRec', 'cashPay', 'unionPay', 'marketEmpList-empSaleCommission'],
-				serverValue: ['sumSales', 'sumRec', 'sumCash', 'sumUnion', 'scSum']
+				serverValue: ['sumSales', 'sumRec', 'sumCash', 'sumUnion', 'scSum']	
+			}:{
+				key: [],
+				value: [],
+				serverValue: []
 			},
 			searchConfig: {
 				showKeyWord: true,

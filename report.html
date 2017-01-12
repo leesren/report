@@ -958,9 +958,17 @@
 	<!--start消耗单明细-->
 	<script type="text/template" id="reportWorkDetail-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
+            <% var path = new Path();var map = path.paraMap(window.location.href);%>
             <thead class="multi-header">
                 <tr>
                     <th rowspan="2" class="fixed-coloum-header">客户</th>
+                    <% 
+                        if(map.organizationId) {
+                        %>
+                           <th rowspan="2">门店</th>
+                        <%   
+                        }
+                    %>
                     <th rowspan="2">日期</th>
                     <th rowspan="2">客户类型</th>
                     <th rowspan="2">订单类型</th>
@@ -997,6 +1005,15 @@
                         <td rowspan="<%=rowspan%>" class="text first-coloum-flag">
                             <%=el.customerName%>
                         </td>
+                        <% 
+                            if(map.organizationId) {
+                            %>
+                                <td rowspan="<%=rowspan%>" class="text">
+                                    <%=el.storeName%>
+                                </td>
+                            <%   
+                            }
+                        %>
                         <td rowspan="<%=rowspan%>" class="text">
                         <span style="vertical-align:middle"><%=el.date%></span>
                         </td>
@@ -1130,9 +1147,17 @@
 	<!--start销售明细-->
 	<script type="text/template" id="reportMarketDetail-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
+            <% var path = new Path();var map = path.paraMap(window.location.href);%>
             <thead class="multi-header">
                 <tr>
                     <th rowspan="2" class="fixed-coloum-header">客户</th>
+                    <% 
+                        if(map.organizationId) {
+                        %>
+                           <th rowspan="2">门店</th>
+                        <%   
+                        }
+                    %>
                     <th rowspan="2">日期</th>
                     <th rowspan="2">客户类型</th>
                     <th rowspan="2">项目</th>
@@ -1196,6 +1221,15 @@
                         <td rowspan="<%=rowspan%>" class="text first-coloum-flag"> 
                             <%=el.customerName%>
                         </td>
+                        <% 
+                            if(map.organizationId) {
+                            %>
+                            <td rowspan="<%=rowspan%>"> 
+                                <%=el.storeName%>
+                            </td>
+                            <%   
+                            }
+                        %>
                         <td rowspan="<%=rowspan%>">
                             <%=el.date%>
                         </td>
@@ -2836,7 +2870,7 @@
         </table>
     </script>
 	<!--end取货报表详情-->
-    <!--start客户临时转店消费记录-->
+	<!--start客户临时转店消费记录-->
 	<script type="text/template" id="customerTransOrdersReport-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
             <thead>
