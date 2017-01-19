@@ -1588,6 +1588,7 @@
 	<script type="text/template" id="reportStore-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
             <thead class="multi-header">
+                <% var headerList= eval('(' + window.localStorage.getItem("businessHeader") + ')'); %>
                 <tr>
                     <th rowspan="2" class="fixed-coloum-header">日期</th>
                     <th colspan="3" text-center>客流</th>
@@ -1597,7 +1598,7 @@
                     <th rowspan="2" class="sortable" data-sort="totalStroeSales">销售合计</th>
                     <th rowspan="2" class="sortable" data-sort="totalStoreConsume">消耗合计</th>
                     <th colspan="5" text-center>赠送</th>
-                    <th colspan="8" text-center>线上</th>
+                    <th colspan="<%=headerList.length%>" text-center>支付方式</th>
                     <th rowspan="2">备注</th>
                 </tr>
                 <tr>
@@ -1622,16 +1623,19 @@
                     <th>服务项目</th>
                     <th>商品</th>
                     <th>合计</th>
-
-                     <th>支付宝</th>
+                <% headerList.map(function(el,index){%>
+                     <!--<th>支付宝</th>
                     <th>京东支付</th>
                     <th>微信支付</th>
                     <th>招联支付</th>
                     <th>百度钱包</th>
                     <th>QQ钱包</th>
                     <th>其他支付</th>
-                    <th>线上支付合计</th>
+                    <th>线上支付合计</th>-->
+                    <th><%=el.name%></th>
+                <%});%>
                 </tr>
+                
             </thead>
             <tbody id="tb" class="tbody">
                 <%data.map(function(el,index){%>
@@ -1706,7 +1710,7 @@
                             <%=miliFormat(((el.giftSum-0).toFixed(2)-0))%>
                         </td>
                         
-                        <td class="num">
+                        <!--<td class="num">
                             <%=miliFormat(((el.aliPay-0).toFixed(2)-0))%>
                         </td>
                         <td class="num">
@@ -1729,7 +1733,12 @@
                         </td>
                         <td class="num">
                             <%=miliFormat(((el.onlinePay-0).toFixed(2)-0))%>
-                        </td>
+                        </td>-->
+                        <%el.pmList.map(function(e,index){%>
+                            <td class="num">
+                                <%=miliFormat(((e.amount-0).toFixed(2)-0))%>
+                            </td>
+                        <%});%>
                         <td class="text">-</td>
                     </tr>
                     <%});%>

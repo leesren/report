@@ -667,7 +667,7 @@
 			var customerId = $(e.currentTarget).data("id");
 			var storeId = $(e.currentTarget).data("storeid");
 			var time = $(e.currentTarget).data('time');
-			start = end = time.substring(0,time.indexOf(" "));
+			start = end = time.substring(0, time.indexOf(" "));
 			if (!customerId) {
 				return;
 			}
@@ -1239,10 +1239,10 @@
 							saleTarget: saleTarget,
 							arriveSum: arriveSum
 						}
+						window.localStorage.setItem("businessHeader",JSON.stringify(result.data.paymentModelList));
 						result.data = result.data.data;
 					}
-				}
-				else {
+				} else {
 					result.data = [];
 				}
 				return result;
