@@ -359,6 +359,7 @@
                     <th>客户</th>
                     <th>客户类型</th>
                     <th>受理单类型</th>
+                    <th>品类</th>
                     <th>项目</th>
                     <th>类型</th>
                     <th>数量</th>
@@ -391,6 +392,9 @@
                         </td>
                         <td rowspan="<%=rowspan%>" class="text">
                             <%=el.orderType%>
+                        </td>
+                        <td class="text">
+                            <%=firstItem[0]?firstItem[0].productCategory:''%>
                         </td>
                         <td class="text">
                             <%=firstItem[0]?firstItem[0].itemName:''%>
@@ -528,6 +532,7 @@
                     <th>日期</th>
                     <th>客户</th>
                     <th>客户类型</th>
+                    <th>品类</th>
                     <th>项目</th>
                     <th>房间</th>
                     <th class="sortable" data-sort="consumeNumber">消耗数</th>
@@ -559,6 +564,9 @@
                         </td>
                         <td class="text">
                             <%=el.customerType%>
+                        </td>
+                        <td class="text">
+                            <%=el.productCategory%>
                         </td>
                         <td class="text">
                             <%=el.productName%>
@@ -1147,7 +1155,7 @@
 	<!--start销售明细-->
 	<script type="text/template" id="reportMarketDetail-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
-            <% var path = new Path();var map = path.paraMap(window.location.href);%>
+            <% var path = new Path();var map = path.paraMap(window.location.href);var headerList= eval('(' + window.localStorage.getItem("businessHeader") + ')');%>
             <thead class="multi-header">
                 <tr>
                     <th rowspan="2" class="fixed-coloum-header">客户</th>
@@ -1166,7 +1174,7 @@
                     <th rowspan="2">数量</th>
                     <th rowspan="2">单价</th>
                     <th rowspan="2">实收金额</th>
-                    <th colspan="13" style="text-align:center">支付详情</th>
+                    <th colspan="<%=headerList.length%>" style="text-align:center">支付详情</th>
                     <th rowspan="2">门店销售业绩</th>
                     <th colspan="4" style="text-align:center">参与员工及销售业绩详情</th>
                     <th rowspan="2">邀约人</th>
@@ -1177,7 +1185,7 @@
                     <th rowspan="2">备注</th>
                 </tr>
                 <tr>
-                    <th>现金</th>
+                    <!--<th>现金</th>
                     <th>储蓄卡</th>
                     <th>信用卡</th>
                     <th>会员卡</th>
@@ -1191,7 +1199,10 @@
                     <th>微信支付</th>
                     <th>京东支付</th>
                     <th>招联支付</th>
-                    <th>其他支付</th>
+                    <th>其他支付</th>-->
+                    <% headerList.map(function(el,index){%>
+                        <th><%=el.name%></th>
+                    <%});%>
 
                     <th>人员</th>
                     <th>职位</th>
@@ -1252,7 +1263,8 @@
                         <td rowspan="<%=rowspan%>" class="num">
                             <%=miliFormat(((el.realRec-0).toFixed(2)-0))%>
                         </td>
-                        <td rowspan="<%=rowspan%>" class="num">
+
+                        <!--<td rowspan="<%=rowspan%>" class="num">
                             <%=miliFormat(((el.cashPay-0).toFixed(2)-0))%>
                         </td>
                         <td rowspan="<%=rowspan%>" class="num">
@@ -1293,11 +1305,12 @@
                         </td>
                         <td rowspan="<%=rowspan%>" class="num">
                             <%=miliFormat(((el.otherPay-0).toFixed(2)-0))%>
-                        </td>
-
-
-
-
+                        </td>-->
+                        <%el.pmList.map(function(e,index){%>
+                            <td rowspan="<%=rowspan%>" class="num">
+                                <%=miliFormat(((e.amount-0).toFixed(2)-0))%>
+                            </td>
+                        <%});%>
 
                         <td rowspan="<%=rowspan%>" class="num">
                             <%=miliFormat(((el.sales-0).toFixed(2)-0))%>
@@ -1592,7 +1605,7 @@
                 <tr>
                     <th rowspan="2" class="fixed-coloum-header">日期</th>
                     <th colspan="3" text-center>客流</th>
-                    <th colspan="5" text-center>销售收入</th>
+                    <th colspan="3" text-center>销售收入</th>
                     <th colspan="4" text-center>销售业绩</th>
                     <th colspan="3" text-center>消耗业绩</th>
                     <th rowspan="2" class="sortable" data-sort="totalStroeSales">销售合计</th>
@@ -1606,10 +1619,9 @@
                     <th>到访人次</th>
                     <th class="sortable" data-sort="newNumber">新增新客</th>
                     <th>现金</th>
-                    <th>储蓄卡</th>
-                    <th>信用卡</th>
-                    <th>线上</th>
+                    <th>赠送</th>
                     <th class="sortable" data-sort="payTotal">总计</th>
+
                     <th>充值</th>
                     <th>卡项</th>
                     <th>单次体验</th>
@@ -1656,13 +1668,7 @@
                             <%=miliFormat(((el.cashPay-0).toFixed(2)-0))%>
                         </td>
                         <td class="num">
-                            <%=miliFormat(((el.bankPay-0).toFixed(2)-0))%>
-                        </td>
-                        <td class="num">
-                            <%=miliFormat(((el.creditCardPay-0).toFixed(2)-0))%>
-                        </td>
-                        <td class="num">
-                            <%=miliFormat(((el.onlinePay-0).toFixed(2)-0))%>
+                            <%=miliFormat(((el.presentPay-0).toFixed(2)-0))%>
                         </td>
                         <td class="num">
                             <%=miliFormat(((el.payTotal-0).toFixed(2)-0))%>
@@ -2214,16 +2220,17 @@
 	<script type="text/template" id="areaReportBusiness-tpl">
           <table id="fixTable" class="table table-bordered p4-table">
             <thead class="multi-header">
+                 <% var headerList= eval('(' + window.localStorage.getItem("businessHeader") + ')'); %>
                 <tr>
                     <th rowspan="2" class="fixed-coloum-header">组织名称</th>
                     <th colspan="3" text-center>客流</th>
-                    <th colspan="5" text-center>销售收入</th>
+                    <th colspan="3" text-center>销售收入</th>
                     <th colspan="4" text-center>销售业绩</th>
                     <th colspan="3" text-center>消耗业绩</th>
                     <th rowspan="2" class="sortable" data-sort="totalStroeSales">销售合计</th>
                     <th rowspan="2" class="sortable" data-sort="totalStoreConsume">消耗合计</th>
                     <th colspan="5" text-center>赠送</th>
-                    <th colspan="8" text-center>线上</th>
+                    <th colspan="<%=headerList.length%>" text-center>支付方式</th>
                     <th rowspan="2">备注</th>
                      <th td-more rowspan="2"></th>
                 </tr>
@@ -2231,10 +2238,9 @@
                     <th>项目量</th>
                     <th>到访人次</th>
                     <th class="sortable" data-sort="newNumber">新增新客</th>
+
                     <th>现金</th>
-                    <th>储蓄卡</th>
-                    <th>信用卡</th>
-                    <th>线上</th>
+                    <th>赠送</th>
                     <th class="sortable" data-sort="payTotal">总计</th>
                     <th>充值</th>
                     <th>卡项</th>
@@ -2250,16 +2256,19 @@
                     <th>商品</th>
                     <th>合计</th>
 
-                      <th>支付宝</th>
+                    <% headerList.map(function(el,index){%>
+                      <!--<th>支付宝</th>
                     <th>京东支付</th>
                     <th>招联支付</th>
                     <th>微信支付</th>
                     <th>百度钱包</th>
                     <th>QQ钱包</th>
                     <th>其他支付</th>
-                    <th>线上支付合计</th>
+                    <th>线上支付合计</th>-->
 
                     <!--<th>合计</th>-->
+                    <th><%=el.name%></th>
+                <%});%>
                 </tr>
             </thead>
             <tbody id="tb" class="tbody">
@@ -2292,13 +2301,7 @@
                             <%=miliFormat(((el.cashPay-0).toFixed(2)-0))%>
                         </td>
                         <td class="num">
-                            <%=miliFormat(((el.bankPay-0).toFixed(2)-0))%>
-                        </td>
-                        <td class="num">
-                            <%=miliFormat(((el.creditCardPay-0).toFixed(2)-0))%>
-                        </td>
-                        <td class="num">
-                            <%=miliFormat(((el.onlinePay-0).toFixed(2)-0))%>
+                            <%=miliFormat(((el.presentPay-0).toFixed(2)-0))%>
                         </td>
                         <td class="num">
                             <%=miliFormat(((el.payTotal-0).toFixed(2)-0))%>
@@ -2346,7 +2349,7 @@
                             <%=miliFormat(((el.giftSum-0).toFixed(2)-0))%>
                         </td>
                      
-                        <td class="num">
+                        <!--<td class="num">
                             <%=miliFormat(((el.aliPay-0).toFixed(2)-0))%>
                         </td>
                         <td class="num">
@@ -2369,7 +2372,12 @@
                         </td>
                         <td class="num">
                             <%=miliFormat(((el.onlinePay-0).toFixed(2)-0))%>
-                        </td>
+                        </td>-->
+                        <%el.pmList.map(function(e,index){%>
+                            <td class="num">
+                                <%=miliFormat(((e.amount-0).toFixed(2)-0))%>
+                            </td>
+                        <%});%>
                         <td class="text">-</td>
                          <td text-center td-more>
                             <%

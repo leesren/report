@@ -1256,6 +1256,8 @@
 					var _data = data;
 					if (reportApi.tpl === 'areaReportBusiness' || reportApi.tpl === 'reportStore' || reportApi.tpl === 'reportRefund') {// 处理营业报表 退款报表
 						_data = handleReportBusiness(data);
+					}else if(reportApi.tpl === 'reportMarketDetail') {
+						window.localStorage.setItem("businessHeader",JSON.stringify(data.data.paymentModelList));
 					}
 					callback(_data);
 				},
