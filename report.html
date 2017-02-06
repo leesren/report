@@ -335,10 +335,10 @@
                             <td style="text-align:center;width:30px !important;min-width:30px !important;max-width:40px;"><i class="iconfont">&#xe6a7;</i></td>
                             <%}else{%>
                                 <td class="text"><a  class="emp-detailBtn" data-role="sale"
-                                        data-id="<%=el.eid%>" style="color: #bca173;display: inline-block;border: 1px solid #886B3B;border-radius: 4px;padding: 2px 4px;">销售详情<i class="iconfont">&#xe629;</i></a>
+                                        data-id="<%=el.eid%>" style="color: #d6ae76;display: inline-block;border: 1px solid #e4cdae;border-radius: 4px;padding: 2px 4px;">销售详情<i class="iconfont">&#xe629;</i></a>
                                     <a
                                          class="emp-detailBtn" data-role="consume"
-                                        data-id="<%=el.eid%>" style="color: #bca173;display: inline-block;border: 1px solid #886B3B;border-radius: 4px;padding: 2px 4px;margin-left: 6px;">消耗详情<i class="iconfont">&#xe629;</i></a>
+                                        data-id="<%=el.eid%>" style="color: #d6ae76;display: inline-block;border: 1px solid #e4cdae;border-radius: 4px;padding: 2px 4px;margin-left: 6px;">消耗详情<i class="iconfont">&#xe629;</i></a>
                                 </td>
                                 <%}%>
                     </tr>
@@ -970,13 +970,13 @@
             <thead class="multi-header">
                 <tr>
                     <th rowspan="2" class="fixed-coloum-header">客户</th>
-                    <% 
+                    <!--<% 
                         if(map.organizationId) {
                         %>
                            <th rowspan="2">门店</th>
                         <%   
                         }
-                    %>
+                    %>-->
                     <th rowspan="2">日期</th>
                     <th rowspan="2">客户类型</th>
                     <th rowspan="2">订单类型</th>
@@ -1013,7 +1013,7 @@
                         <td rowspan="<%=rowspan%>" class="text first-coloum-flag">
                             <%=el.customerName%>
                         </td>
-                        <% 
+                        <!--<% 
                             if(map.organizationId) {
                             %>
                                 <td rowspan="<%=rowspan%>" class="text">
@@ -1021,7 +1021,7 @@
                                 </td>
                             <%   
                             }
-                        %>
+                        %>-->
                         <td rowspan="<%=rowspan%>" class="text">
                         <span style="vertical-align:middle"><%=el.date%></span>
                         </td>
@@ -1159,13 +1159,13 @@
             <thead class="multi-header">
                 <tr>
                     <th rowspan="2" class="fixed-coloum-header">客户</th>
-                    <% 
+                    <!--<% 
                         if(map.organizationId) {
                         %>
                            <th rowspan="2">门店</th>
                         <%   
                         }
-                    %>
+                    %>-->
                     <th rowspan="2">日期</th>
                     <th rowspan="2">客户类型</th>
                     <th rowspan="2">项目</th>
@@ -1232,7 +1232,7 @@
                         <td rowspan="<%=rowspan%>" class="text first-coloum-flag"> 
                             <%=el.customerName%>
                         </td>
-                        <% 
+                        <!--<% 
                             if(map.organizationId) {
                             %>
                             <td rowspan="<%=rowspan%>"> 
@@ -1240,7 +1240,7 @@
                             </td>
                             <%   
                             }
-                        %>
+                        %>-->
                         <td rowspan="<%=rowspan%>">
                             <%=el.date%>
                         </td>
@@ -2929,9 +2929,9 @@
                         <%if(device().isMobile){%>
                             <td style="text-align:center;width:30px !important;min-width:30px !important;max-width:40px;"><i class="iconfont">&#xe6a7;</i></td>
                         <%}else{%>
-                            <td class="text"><a  class="emp-detailBtn" data-role="sale" style="color: #bca173;display: inline-block;border: 1px solid #886B3B;border-radius: 4px;padding: 2px 4px;">销售详情<i class="iconfont">&#xe629;</i></a>
+                            <td class="text"><a  class="emp-detailBtn" data-role="sale" style="color: #d6ae76;display: inline-block;border: 1px solid #e4cdae;border-radius: 4px;padding: 2px 4px;">销售详情<i class="iconfont">&#xe629;</i></a>
                                 <a
-                                        class="emp-detailBtn" data-role="consume" style="color: #bca173;display: inline-block;border: 1px solid #886B3B;border-radius: 4px;padding: 2px 4px;margin-left: 6px;">消耗详情<i class="iconfont">&#xe629;</i></a>
+                                        class="emp-detailBtn" data-role="consume" style="color: #d6ae76;display: inline-block;border: 1px solid #e4cdae;border-radius: 4px;padding: 2px 4px;margin-left: 6px;">消耗详情<i class="iconfont">&#xe629;</i></a>
                             </td>
                         <%}%>
                     </tr>
