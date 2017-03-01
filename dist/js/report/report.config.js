@@ -198,7 +198,10 @@
 			searchConfig: {
 				showTime: false,
 				showKeyWord: true,
-				keyWord: ['客户', '顾问']
+				keyWord: ['客户', '顾问'],
+				showTip: {
+					text:'红色字体：销户用户'
+				}
 			},
 			note: {
 				text: noteText

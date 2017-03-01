@@ -199,6 +199,9 @@
 		.none {
 			display: none;
 		}
+        .red {
+            color: red!important;
+        }
 	</style>
 </head>
 
@@ -226,6 +229,7 @@
                         <input type="checkbox" id="searchCheckbox">
                         <span>只显示美容师与顾问</span>
                     </label>
+                    <span class="showTip none" style="padding-top: 5px;"></span>
 					<button class="searchByTime myButton">筛选</button>
 				</div>
 				<div class="description"></div>
@@ -457,8 +461,8 @@
                 </tr>
             </thead>
             <tbody id="tb" class="tbody">
-                <%data.map(function(el,index){var itemList=el.items;var rowspan=(itemList.length===0?'':itemList.length);var firstItem=itemList.slice(0,1);%>
-                    <tr>
+                <%data.map(function(el,index){var itemList=el.items;var rowspan=(itemList.length===0?'':itemList.length);var firstItem=itemList.slice(0,1);var disabled=el.isCloseCus=='1'?'red':''%>
+                    <tr class="<%=disabled%>">
                         <td rowspan="<%=rowspan%>" class="text first-coloum-flag">
                             <%=el.customerName%>
                         </td>
@@ -497,7 +501,7 @@
                         </td>
                     </tr>
                     <%if(itemList.length>0){itemList.slice(1,rowspan).map(function(item,i){%>
-                        <tr>
+                        <tr class="<%=disabled%>">
                             <td class="text">
                                 <%=item.tpName%>
                             </td>

@@ -1146,6 +1146,7 @@
 			var isShowSearch = config.showKeyWord;
 			var isShowTime = config.showTime;
 			var isShowCheckbox = config.showCheckbox;
+			var isShowTip = config.showTip;
 
 			var className = (isShowSearch ? '' : 'hidden');
 			var isShowTimeClass = (isShowTime || isShowTime === undefined ? '' : 'hidden');
@@ -1169,6 +1170,11 @@
 				$('.searchCheckbox').removeClass("none");
 				$('.searchCheckbox span').text(isShowCheckbox.text);
 				$(".searchCheckbox input").prop('checked', isShowCheckbox.checked);
+			}
+
+			if (isShowTip && isShowTip.text.length > 0) {
+				$('.showTip').removeClass("none");
+				$('.showTip').text(isShowTip.text);
 			}
 
 			if (config.time == 'today') {
