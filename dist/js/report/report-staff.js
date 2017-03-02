@@ -1174,7 +1174,7 @@
 
 			if (isShowTip && isShowTip.text.length > 0) {
 				$('.showTip').removeClass("none");
-				$('.showTip').text(isShowTip.text);
+				$('.showTip').html(isShowTip.text);
 			}
 
 			if (config.time == 'today') {

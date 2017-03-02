@@ -199,6 +199,14 @@
 		.none {
 			display: none;
 		}
+        .red-block {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            margin-right: 5px;
+            margin-bottom: -3px;
+            background-color: red;
+        }
         .red {
             color: red!important;
         }
@@ -1179,6 +1187,7 @@
                     <th rowspan="2">单价</th>
                     <th rowspan="2">实收金额</th>
                     <th colspan="<%=headerList.length%>" style="text-align:center">支付详情</th>
+                    <th rowspan="2">赠送</th>
                     <th rowspan="2">门店销售业绩</th>
                     <th colspan="4" style="text-align:center">参与员工及销售业绩详情</th>
                     <th rowspan="2">邀约人</th>
@@ -1316,6 +1325,9 @@
                             </td>
                         <%});%>
 
+                        <td rowspan="<%=rowspan%>" class="num">
+                            <%=miliFormat(((el.gift-0).toFixed(2)-0))%>
+                        </td>
                         <td rowspan="<%=rowspan%>" class="num">
                             <%=miliFormat(((el.sales-0).toFixed(2)-0))%>
                         </td>

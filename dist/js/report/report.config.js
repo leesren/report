@@ -200,7 +200,7 @@
 				showKeyWord: true,
 				keyWord: ['客户', '顾问'],
 				showTip: {
-					text:'红色字体：销户用户'
+					text:"<i class='red-block'></i>红色代表销户用户"
 				}
 			},
 			note: {
