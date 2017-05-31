@@ -421,7 +421,7 @@
                 }
             },
             summary: map.organizationId === undefined ? {
-                key: ['个人消耗业绩总额', '消耗业绩', '消耗提成', '手工工资', '赠送消耗'],
+                key: ['消耗业绩总额', '消耗业绩', '消耗提成', '手工工资', '赠送消耗'],
                 value: ['storeConsume', 'workEmpList-consumeAch', 'workEmpList-commission', 'workEmpList-extrawage'],
                 serverValue: ['sumConsume', 'sumCA', 'sumCC', 'sumEx', 'sumGiftConsume']
 
@@ -456,7 +456,7 @@
                 }
             },
             summary: map.organizationId === undefined ? {
-                key: ['个人销售业绩总额', '实收总额', '现金', '银联', '销售提成总额'],
+                key: ['销售业绩总额', '实收总额', '现金', '银联', '销售提成总额'],
                 value: ['sales', 'realRec', 'cashPay', 'unionPay', 'marketEmpList-empSaleCommission'],
                 serverValue: ['sumSales', 'sumRec', 'sumCash', 'sumUnion', 'scSum']
             } : {
