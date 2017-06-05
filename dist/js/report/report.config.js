@@ -479,6 +479,7 @@
                 'data': {
                     'storeId': (map.storeId === undefined ? '' : map.storeId),
                     'empId': (map.empId === undefined ? '' : map.empId),
+                    'customerId': (map.customerId === undefined ? '' : map.customerId),
                     'keyWord': '',
                     'start': (map.start === undefined ? time.startTime : map.start),
                     'end': (map.end === undefined ? time.endTime : map.end),
