@@ -695,8 +695,8 @@
             body: {
                 'data': {
                     'orgId': (map.organizationId === undefined ? map.storeId : map.organizationId),
-                    'start': (map.start === undefined ? day.startTime : map.start),
-                    'end': (map.end === undefined ? day.endTime : map.end),
+                    // 'start': (map.start === undefined ? day.startTime : map.start),
+                    // 'end': (map.end === undefined ? day.endTime : map.end),
                     'keyWord': '',
                     'id': (map.couponId === undefined ? '' : map.couponId)
                 }
@@ -743,8 +743,6 @@
             body: {
                 'data': {
                     'orgId': (map.storeId === undefined ? '' : map.storeId),
-                    'start': (map.start === undefined ? day.startTime : map.start),
-                    'end': (map.end === undefined ? day.endTime : map.end),
                     'keyWord': '',
                     'id': (map.couponId === undefined ? '' : map.couponId)
                 }
@@ -754,9 +752,33 @@
                 value: []
             },
             searchConfig: {
+                showTime: false,
                 showKeyWord: true,
                 time: 'today',
-                keyWord: ['券号']
+                keyWord: ['券号', '会员']
+            },
+            note: {
+                text: noteText
+            }
+        },
+        reportStoreCouponsConsumeDetail: { // 门店体验券消耗详情
+            url: uri + 'api/doReport/reportCouponConsumeDetail',
+            body: {
+                'data': {
+                    'orgId': (map.storeId === undefined ? '' : map.storeId),
+                    'start': (map.start === undefined ? day.startTime : map.start),
+                    'end': (map.end === undefined ? day.endTime : map.end),
+                    'keyWord': '',
+                }
+            },
+            summary: {
+                key: [],
+                value: []
+            },
+            searchConfig: {
+                showKeyWord: true,
+                time: 'week',
+                keyWord: ['券名', '券号', '会员']
             },
             note: {
                 text: noteText

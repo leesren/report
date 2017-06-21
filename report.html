@@ -2669,7 +2669,7 @@
                     <th>授权门店</th>
                     <th>体验券名</th>
                     <!--<th>号段</th>-->
-                    <th>使用完成数量</th>
+                    <th>兑换数量</th>
                     <th td-more text-center></th>
                 </tr>
             </thead>
@@ -2723,7 +2723,7 @@
                     <!--<th>授权门店</th>-->
                     <th>体验券名</th>
                     <!--<th>号段</th>-->
-                    <th>使用完成数量</th>
+                    <th>兑换数量</th>
                     <th td-more text-center></th>
                 </tr>
             </thead>
@@ -2773,10 +2773,43 @@
         <table id="fixTable" class="table table-bordered p4-table">
             <thead>
                 <tr>
+                    <th>优惠券号</th>
+                    <th>兑换会员</th>
+                    <th>兑换门店</th>
+                    <th>兑换日期</th>
+                </tr>
+            </thead>
+            <tbody id="tb" class="tbody">
+                <%data.map(function(el,index){%>
+                    <tr>
+                        <td class="text">
+                            <%=el.code%>
+                        </td>
+                        <td class="num">
+                            <%=el.customerName%>
+                        </td>
+                        <td class="text">
+                            <%=el.orgName%>
+                        </td>
+                        <td class="text">
+                            <%=el.date%>
+                        </td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+    </script>
+    <!--end门店体验券详情-->
+
+    <!--start门店体验券消耗详情-->
+    <script type="text/template" id="reportStoreCouponsConsumeDetail-tpl">
+        <table id="fixTable" class="table table-bordered p4-table">
+            <thead>
+                <tr>
                     <th>体验券名称</th>
                     <th>体验券编号</th>
                     <th>体验劵状态</th>
-                    <th>指派人</th>
+                    <!--<th>指派人</th>-->
                     <!--<th>授权门店</th>-->
                     <th>消费门店</th>
                     <th>单据日期</th>
@@ -2788,7 +2821,7 @@
             </thead>
             <tbody id="tb" class="tbody">
                 <%data.map(function(el,index){%>
-                    <tr data-id="<%=el.id%>" style="cursor: pointer;">
+                    <tr data-id="<%=el.id%>">
                         <td class="text">
                             <%=el.couponName%>
                         </td>
@@ -2798,9 +2831,9 @@
                         <td class="text">
                             <%=el.statusName%>
                         </td>
-                        <td class="text">
+                        <!--<td class="text">
                             <%=el.empName%>
-                        </td>
+                        </td>-->
                         <!--<td class="text">
                             <%=el.empowerName%>
                         </td>-->
@@ -2827,7 +2860,7 @@
             </tbody>
         </table>
     </script>
-    <!--end门店体验券详情-->
+    <!--end门店体验券消耗详情-->
 
     <!--start客户来源-->
     <script type="text/template" id="reportCustomerSource-tpl">
@@ -3072,7 +3105,7 @@
     <script src="dist/lib/underscore/underscore-min.js?v=2.0.0"></script>
     <script src="dist/lib/backbone/backbone-min.js?v=2.0.0"></script>
     <!--<script src="dist/js/report/report.config.js?v=2.0.0"></script>
-    <script src="dist/js/report/report-staff.js?v=3.0.0"></script> -->
+    <script src="dist/js/report/report-staff.js?v=3.0.0"></script>-->
     <script src="dist/js/report/report.min.js?v=3.0.0"></script>
 
     <script src="dist/js/report/exportexcel.js?v=1.0.0"></script>

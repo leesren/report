@@ -492,6 +492,10 @@
         template: _.template($('#reportStoreCouponsDetail-tpl').html())
     });
 
+    var ReportStoreCouponsConsumeDetailView = BaseView.extend({ // 门店体验券消耗详情
+        template: _.template($('#reportStoreCouponsConsumeDetail-tpl').html())
+    });
+
 
     //  区域品类汇总报表
     var AreaReportCategoryView = BaseView.extend({ // 品牌卡项汇总 视图
@@ -807,6 +811,9 @@
         }, { // 门店体验券详情视图
             name: 'reportStoreCouponsDetail',
             view: ReportStoreCouponsDetailView
+        }, { // 门店体验券消耗详情视图
+            name: 'reportStoreCouponsConsumeDetail',
+            view: ReportStoreCouponsConsumeDetailView
         }, { // 客户临时转店消费记录视图
             name: 'customerTransOrdersReport',
             view: customerTransOrdersReportView
