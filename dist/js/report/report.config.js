@@ -765,7 +765,7 @@
             url: uri + 'api/doReport/reportCouponConsumeDetail',
             body: {
                 'data': {
-                    'orgId': (map.storeId === undefined ? '' : map.storeId),
+                    'orgId': (map.storeId === undefined ? map.organizationId : map.storeId),
                     'start': (map.start === undefined ? day.startTime : map.start),
                     'end': (map.end === undefined ? day.endTime : map.end),
                     'keyWord': '',
