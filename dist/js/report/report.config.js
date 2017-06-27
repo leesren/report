@@ -777,7 +777,7 @@
             },
             searchConfig: {
                 showKeyWord: true,
-                time: 'week',
+                time: 'today',
                 keyWord: ['券名', '券号', '会员']
             },
             note: {
