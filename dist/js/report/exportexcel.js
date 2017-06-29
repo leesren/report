@@ -171,8 +171,8 @@ $(function () {
                     break;
                 case 'reportStoreCouponsConsumeDetail':
                     type = 34;
-                    if(map.organizationId === undefined){
-                    	map.organizationId = map.storeId;
+                    if (map.organizationId === undefined) {
+                        map.organizationId = map.storeId;
                     }
                     filename = '门店体验券消耗详情';
                     break;
@@ -208,28 +208,34 @@ $(function () {
                 'type': type,
                 'reportDto': reportDto
             }
+            var priod = eher_util.getDateTime($('.endTime').val()) - eher_util.getDateTime($('.startTime').val());
+            var day_time = 1 * 24 * 60 * 60 * 1000;
+            if( (priod / day_time)  > 93 ){
+                alert('您导出的报表时间范围超过了3个月！');
+                return;
+            }
 
             if (filename) {
                 window.excle = true;
                 var url = uri + 'export_excel.do';
-                if(window.isExport) return;
+                if (window.isExport) return;
                 window.isExport = true;
-                $('#exportexcel').attr('disabled',true).css('opacity',0.4).text('处理中...');
-                loadData(url,data,function(result){
-                    
+                $('#exportexcel').attr('disabled', true).css('opacity', 0.4).text('处理中...');
+                loadData(url, data, function (result) {
+
                     window.isExport = false;
-                    if(!window.XLSX){
-                        window.excle = false;  
-                        return; 
+                    if (!window.XLSX) {
+                        window.excle = false;
+                        return;
                     }
-                    eher_util.write_excle(result.data, '#'+tpl+'-tpl', filename);
+                    eher_util.write_excle(result.data, '#' + tpl + '-tpl', filename);
                     window.excle = false;
-                    $('#exportexcel').attr('disabled',false).css('opacity',1).text('导出EXCEL');
-                },function(error){
+                    $('#exportexcel').attr('disabled', false).css('opacity', 1).text('导出EXCEL');
+                }, function (error) {
                     alert('导出失败，请重试');
                     window.excle = false;
                     window.isExport = false;
-                    $('#exportexcel').attr('disabled',false).css('opacity',1).text('导出EXCEL');
+                    $('#exportexcel').attr('disabled', false).css('opacity', 1).text('导出EXCEL');
                 })
             }
             else {
@@ -239,18 +245,18 @@ $(function () {
     }
 });
 
-function loadData(url,data,callback,error){
+function loadData(url, data, callback, error) {
     $.ajax({
-        url:url,
+        url: url,
         type: "POST",
-        data:JSON.stringify( data),
-        contentType:'application/json',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
         success: function (res) {
-            if(typeof callback === 'function')
-             callback(res);
+            if (typeof callback === 'function')
+                callback(res);
         },
         error: function (e) {
-            if(typeof error === 'function')
+            if (typeof error === 'function')
                 error(e)
         },
     });
@@ -280,7 +286,17 @@ function createForm(url, data) {
     form.remove();
     return false;
 }
-function eher_util(){}
+function eher_util() { }
+eher_util.prototype.getDateTime = function (str) {
+    if(!str) return Date.now();
+    var a = str.split('-');
+    if(!a.length) return Date.now();
+    var d = new Date();
+    d.setFullYear(a[0]);
+    d.setMonth(a[1] - 1);
+    d.setDate(a[2])
+    return d.getTime()
+}
 eher_util.prototype.s2ab = function s2ab(s) {
     if (typeof ArrayBuffer !== 'undefined') {
         var buf = new ArrayBuffer(s.length);
@@ -293,11 +309,11 @@ eher_util.prototype.s2ab = function s2ab(s) {
         return buf;
     }
 }
-eher_util.prototype.write_excle = function (out_list,tpl_id,filename) {
+eher_util.prototype.write_excle = function (out_list, tpl_id, filename) {
     // console.log('daochu');
- 
+
     var template = _.template($(tpl_id).html());
-    var html = template({ data: out_list,excle:true });
+    var html = template({ data: out_list, excle: true });
     // console.log(html);
     var div = document.createElement('div');
     div.innerHTML = html;
@@ -307,7 +323,7 @@ eher_util.prototype.write_excle = function (out_list,tpl_id,filename) {
         var type = 'xlsx';
         var wb = XLSX.utils.table_to_book(dom, { sheet: "Sheet JS" });
         var wbout = XLSX.write(wb, { bookType: type, bookSST: true, type: 'binary' });
-        var fname = (filename || 'data' )+'.' + type;
+        var fname = (filename || 'data') + '.' + type;
         try {
             saveAs(new Blob([self.s2ab(wbout)], { type: "application/octet-stream" }), fname);
         } catch (e) { if (typeof console != 'undefined') console.log(e, wbout); }
