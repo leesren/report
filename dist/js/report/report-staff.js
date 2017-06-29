@@ -9,7 +9,7 @@
         var MILI_PATTERN = /(?=(?!\b)(\d{3})+\.?\b)/g;
 
         return function(num) {
-            if (!isNaN(num)) {
+            if ( !isNaN(+num) && !window.excle) {
                 return num && num.toString().replace(DIGIT_PATTERN, function(m) {
                     return m.replace(MILI_PATTERN, ",");
                 });
@@ -110,7 +110,8 @@
                 temp = this.model.data.slice((this.currentIndex * CONFIG.itemsOnPage), CONFIG.itemsOnPage * (this.currentIndex + 1))
             }
             this.$el.html(this.template({
-                data: temp
+                data: temp,
+                excle:false
             }));
             return this;
         },
@@ -874,7 +875,7 @@
             if (list.length != 0) {
                 try {
                     var template = _.template($('#fixed-coloum-tpl').html(), { variable: 'data' });
-                    var html = template({ list: list });
+                    var html = template({ list: list, excle:true });
                     $(html).insertBefore("#fixTable");
                     $('.first-coloum-wrap').css("width", $('.fixed-coloum-header')[0].clientWidth + 'px');
                     $('.t-header').text($('.table .fixed-coloum-header').text());
@@ -1134,9 +1135,10 @@
 
             var me = this;
             this.setConfig(reportApi);
+            if(location.hash.indexOf('#search') != -1) return;
             this.loadData(url, body, function() {}, function(data) {
                 me.data = data;
-                app = new App({
+                app = window.$app = new App({
                     data: data
                 });
             });
@@ -1232,6 +1234,7 @@
             window.cacheReportData.reportRefund = undefined;
 
             function handleReportBusiness(result) { // 处理营业报表数据
+                result.data = result.data || {};
                 if (result.data.data || result.data.dataList) {
                     // 处理退款报表数据
                     if (reportApi.tpl === 'reportRefund') {
@@ -1307,6 +1310,8 @@
         handleProjectType: function(value) { // 处理员工销售的项目类型搜索
             try {
                 var aa = value.trim();
+
+
                 var list = aa.split(' ');
                 var han = [];
                 list.map(function(el, index) {
@@ -1409,11 +1414,22 @@
                     // }else{
 
                     // }
-                    me.data = result;
+                    me.data = result; 
+                    if(!window.$app){
+                        app = window.$app = new App({
+                            data: result
+                        });
+                    }
+                    
                     app.hasRender = false;
                     app.initData(me.data);
                     app.render(1, me.data);
                 } else {
+                    if(!window.$app){
+                        app = window.$app = new App({
+                            data: result
+                        });
+                    }
                     app.noDataView();
                 }
             });

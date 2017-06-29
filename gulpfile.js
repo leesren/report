@@ -16,6 +16,7 @@ var gulp = require('gulp'),// 导入gulp
 	minifyhtml = require('gulp-html-minifier'),// 压缩html
 	minJs = require('gulp-minify'),
 	connect = require('gulp-connect'),
+	htmlmin = require('gulp-htmlmin'),
 	clean = require('gulp-clean'),
 	del = require('del'),
 	runSequence = require('run-sequence'),
@@ -108,6 +109,25 @@ gulp.task('minjs',function(){
 	.pipe(uglify())
 	.pipe(gulp.dest(build.dir));
 });
+
+gulp.task('html', function() {
+  return gulp.src('./src/report.html') 
+    .pipe(htmlmin({
+	  processScripts:['text/template'],
+      removeComments: true,
+      collapseWhitespace: true,
+      collapseBooleanAttributes: true,
+      removeAttributeQuotes: false,
+      removeRedundantAttributes: true,
+      removeEmptyAttributes: true,
+      removeScriptTypeAttributes: true,
+      removeStyleLinkTypeAttributes: true,
+      removeOptionalTags: true,
+	  minifyCSS:true
+    })) 
+    .pipe(gulp.dest('./'));
+});
+
 gulp.task('minhtml',function(){
 	gulp.src(build.html)
 	.pipe(minifyhtml({
@@ -131,8 +151,14 @@ gulp.task('build',['clean'],function(bb){
 gulp.task('default',['server'],function(){
 	gulp.watch(build.js,['minjs']);
 	gulp.watch('less/style.less',['compileLess']);
+	gulp.watch('./src/*.html',['html']);
 	gulp.watch('./dist/**/*').on('change', function (file) {
         gulp.src('./dist/**/*')
+            .pipe(connect.reload());
+    });
+
+	gulp.watch('./*.html').on('change', function (file) {
+        gulp.src('./*.html')
             .pipe(connect.reload());
     });
 });
