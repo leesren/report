@@ -1117,8 +1117,7 @@
             searchConfig: {
                 showTime: false,
                 showMonth: true,
-                showKeyWord: true,
-                keyWord: ['产品名称', '产品编号'],
+                showKeyWord: false,
                 time: 'thisMonth'
             },
             note: {
@@ -1169,8 +1168,7 @@
             searchConfig: {
                 showTime: false,
                 showMonth: true,
-                showKeyWord: true,
-                keyWord: ['产品名称', '产品编号'],
+                showKeyWord: false,
                 time: 'thisMonth'
             },
             note: {

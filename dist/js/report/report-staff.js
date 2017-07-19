@@ -703,6 +703,7 @@
         },
         showDetailBtn: function(e) {
             var productId = $(e.currentTarget).data("id");
+            var name = $(e.currentTarget).data("name");
             var start = $('.startTime').val();
             var hash = '&productId=' + productId + '&start=' + start + '&tpl=inventoryDetailReport';
             var url = window.location.href.substring(0, window.location.href.indexOf('&tpl')) + hash;
@@ -710,7 +711,7 @@
                 window.location.href = url;
             } else {
                 window.JsCallNativeBridge('openReportDetailView', [{
-                    title: '产品交易明细报表',
+                    title: name + '交易明细',
                     url: url
                 }]); // 调用原生
             }
@@ -729,6 +730,7 @@
         showDetailBtn: function(e) {
             var productId = $(e.currentTarget).data("id");
             var storageId = $(e.currentTarget).data("storageid");
+            var name = $(e.currentTarget).data("name");
             var start = $('.startTime').val();
             var hash = '&productId=' + productId + '&storageId=' + storageId + '&start=' + start + '&tpl=storageInventoryDetailReport';
             var url = window.location.href.substring(0, window.location.href.indexOf('&tpl')) + hash;
@@ -736,7 +738,7 @@
                 window.location.href = url;
             } else {
                 window.JsCallNativeBridge('openReportDetailView', [{
-                    title: '产品交易明细报表',
+                    title: name + '交易明细',
                     url: url
                 }]); // 调用原生
             }

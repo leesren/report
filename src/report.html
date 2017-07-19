@@ -3082,7 +3082,7 @@
             </thead>
             <tbody id="tb" class="tbody">
                 <%data.map(function(el,index){%>
-                    <tr data-id="<%=el.productId%>">
+                    <tr data-id="<%=el.productId%>" data-name="<%=el.productName%>">
                         <td class="text">
                             <%=el.organizationName%>
                         </td>
@@ -3178,7 +3178,7 @@
             </thead>
             <tbody id="tb" class="tbody">
                 <%data.map(function(el,index){%>
-                    <tr data-id="<%=el.productId%>" data-storageid="<%=el.storageId%>">
+                    <tr data-id="<%=el.productId%>" data-storageid="<%=el.storageId%>" data-name="<%=el.productName%>">
                         <td class="text">
                             <%=el.organizationName%>
                         </td>
