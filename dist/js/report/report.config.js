@@ -94,6 +94,10 @@
     var month = dateSegment('month');
     var lastMonthDate = dateSegment('lastMonth');
     var noteText = '表格太长可以拖动';
+    var nowDate = new Date();
+    var nowMonth = nowDate.getMonth() + 1;
+    var nowMonthFormat = nowMonth < 10 ? '0' + nowMonth : nowMonth;
+    var thisMonth = nowDate.getFullYear() + '-' + nowMonthFormat;
     /*
      * 初始化 时间组件
      * 默认一周 时间间隔
@@ -1065,6 +1069,109 @@
                 showKeyWord: true,
                 time: 'week',
                 keyWord: ['客户姓名', '客户编号']
+            },
+            note: {
+                text: noteText
+            }
+        },
+        totalInventoryReport: { // 产品总库存
+            url: uri + 'api/doWareHouse/monthInvertoryByOrganization',
+            body: {
+                data: {
+                    organizationList: [{
+                        organizationId: (map.organizationId === undefined ? '' : map.organizationId)
+                    }],
+                    keyWord: "",
+                    month: (map.start === undefined ? thisMonth : map.start)
+                }
+            },
+            summary: {
+                key: [],
+                value: []
+            },
+            searchConfig: {
+                showTime: false,
+                showMonth: true,
+                showKeyWord: true,
+                keyWord: ['产品名称', '产品编号'],
+                time: 'thisMonth'
+            },
+            note: {
+                text: noteText
+            }
+        },
+        inventoryDetailReport: { // 产品总库存详情
+            url: uri + 'api/doWareHouse/monthInvertoryDetailByOrganization',
+            body: {
+                data: {
+                    organizationId: (map.organizationId === undefined ? '' : map.organizationId),
+                    productId: (map.productId === undefined ? '' : map.productId),
+                    month: (map.start === undefined || map.start === 'undefined' ? thisMonth : map.start),
+                    keyWord: ""
+                }
+            },
+            summary: {
+                key: [],
+                value: []
+            },
+            searchConfig: {
+                showTime: false,
+                showMonth: true,
+                showKeyWord: true,
+                keyWord: ['产品名称', '产品编号'],
+                time: 'thisMonth'
+            },
+            note: {
+                text: noteText
+            }
+        },
+        storageInventoryReport: { // 产品分仓库库存
+            url: uri + 'api/doWareHouse/monthInvertoryByStorage',
+            body: {
+                data: {
+                    organizationList: [{
+                        organizationId: (map.organizationId === undefined ? '' : map.organizationId)
+                    }],
+                    keyWord: "",
+                    month: (map.start === undefined ? thisMonth : map.start)
+                }
+            },
+            summary: {
+                key: [],
+                value: []
+            },
+            searchConfig: {
+                showTime: false,
+                showMonth: true,
+                showKeyWord: true,
+                keyWord: ['产品名称', '产品编号'],
+                time: 'thisMonth'
+            },
+            note: {
+                text: noteText
+            }
+        },
+        storageInventoryDetailReport: { // 产品分仓库库存详情
+            url: uri + 'api/doWareHouse/monthInvertoryDetailByStorage',
+            body: {
+                data: {
+                    storageId: (map.storageId === undefined ? '' : map.storageId),
+                    organizationId: (map.organizationId === undefined ? '' : map.organizationId),
+                    productId: (map.productId === undefined ? '' : map.productId),
+                    month: (map.start === undefined || map.start === 'undefined' ? thisMonth : map.start),
+                    keyWord: ""
+                }
+            },
+            summary: {
+                key: [],
+                value: []
+            },
+            searchConfig: {
+                showTime: false,
+                showMonth: true,
+                showKeyWord: true,
+                keyWord: ['产品名称', '产品编号'],
+                time: 'thisMonth'
             },
             note: {
                 text: noteText

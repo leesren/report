@@ -150,6 +150,22 @@
             max-width: 40px;
         }
         
+        .main-wraper .month-text {
+            display: -webkit-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            color: #787878;
+            margin-right: 0;
+            font-size: 12px;
+        }
+        
+        .main-wraper .month-text.none {
+            display: none;
+        }
+        
         @media screen and (max-width: 768px) {
             .layout-col2-v,
             .main-wraper .p4-table tr,
@@ -212,13 +228,13 @@
         .red {
             color: red!important;
         }
-
-        @media screen and (min-width: 1024px){
-            .main-wraper .table-nav .end-time input, .main-wraper .table-nav .start-time input{
+        
+        @media screen and (min-width: 1024px) {
+            .main-wraper .table-nav .end-time input,
+            .main-wraper .table-nav .start-time input {
                 min-width: 110px;
             }
         }
-
     </style>
 </head>
 
@@ -241,6 +257,10 @@
                     <div class="end-time">
                         <span><input type="date" value="" min="1990-09-09" max="2030-09-18" class="endTime" ></span><em><i class="iconfont">&#xe6a7;</i></em>
                     </div>
+                    </span>
+                    <span class="month-text none">
+                        <span class="start-label">月份</span>
+                    <div class="start-time"><span><input type="month" value="" min="1990-01" max="2030-12"  class="startTime" ></span><em><i class="iconfont">&#xe6a7;</i></em></div>
                     </span>
                     <label class="searchCheckbox none" for="searchCheckbox">
                         <input type="checkbox" id="searchCheckbox">
@@ -1031,10 +1051,14 @@
                 <tbody id="tb" class="tbody">
                     <%var orderType=['正常','预付款','体验券'];data.map(function(el,index){var rowspan=(el.workEmpList.length===0?'':el.workEmpList.length);var emp=(el.workEmpList.length===0?[]:el.workEmpList[0]);var isUx=((el.orderType-0)===2);var orderTypeText=((el.orderType-0)===2||(el.orderType-0)===1?'<span class="pointRed">'+orderType[el.orderType-0]+''+(el.sourceName?'<i style="font-size: 14px;font-style: oblique;">(派发人: '+el.sourceName+')</i></span>':''):orderType[el.orderType-0]);var experienceCard=(el.orderType-0)===2||(el.orderType-0)===1||el.inviters?'experienceCard':'';%>
                         <tr class="<%=experienceCard%>">
-                            <td rowspan="<%=rowspan%>" class="text first-coloum-flag"><%=el.customerName%></td>
+                            <td rowspan="<%=rowspan%>" class="text first-coloum-flag">
+                                <%=el.customerName%>
+                            </td>
                             <td rowspan="<%=rowspan%>" class="text"><span style="vertical-align:middle"><%=el.date%></span></td>
 
-                            <td rowspan="<%=rowspan%>" class="text"><%=el.customerType%></td>
+                            <td rowspan="<%=rowspan%>" class="text">
+                                <%=el.customerType%>
+                            </td>
                             <td rowspan="<%=rowspan%>" class="text">
                                 <%=orderTypeText%>
                             </td>
@@ -1082,8 +1106,11 @@
                             </td>
                             <td class="num">
                                 <%=(emp.extrawage=="*"?emp.extrawage:miliFormat(((emp.extrawage-0).toFixed(2)-0)))%>
-                            </td> 
-                            <td class="text" rowspan="<%=rowspan%>"><div style="font-size:12px;"> <%=el.evaluteDes?el.evaluteDes:'-'%> </div>
+                            </td>
+                            <td class="text" rowspan="<%=rowspan%>">
+                                <div style="font-size:12px;">
+                                    <%=el.evaluteDes?el.evaluteDes:'-'%>
+                                </div>
                                 <%
                                 if(!excle){
                                 %>
@@ -1091,10 +1118,10 @@
                                         <%for(var k=0;k<el.evaluateValue;k++){%><img style="display:inline-block;height:14px;width:14px;color:red" src="dist/images/star.svg">
                                             <%}%>
                                     </div>
-                                <%
+                                    <%
                                 }
                                 %>
-                                
+
                             </td>
                             <td rowspan="<%=rowspan%>" class="text">
                                 <%=el.advisor%>
@@ -1134,7 +1161,10 @@
                           var isAppoint = emp.isAppont == 1 ? 'dist/images/appointment.svg' : '' ; //isAppoint 1是指定，0是非指定
                     %>
                             <tr class="<%=experienceCard%>">
-                                <td class="text"><span style="vertical-align: middle;"><%=emp.empName%></span><% if(emp.isAppont == 1 ){ %><span style="color:#11cd6e">[指定]</span><%}%></td>
+                                <td class="text"><span style="vertical-align: middle;"><%=emp.empName%></span>
+                                    <% if(emp.isAppont == 1 ){ %><span style="color:#11cd6e">[指定]</span>
+                                        <%}%>
+                                </td>
                                 <td class="text">
                                     <%=emp.postType%>
                                 </td>
@@ -3032,6 +3062,194 @@
         </table>
     </script>
     <!--end客户临时转店消费记录-->
+    <!--start库存报表-->
+    <script type="text/template" id="totalInventoryReport-tpl">
+        <table id="fixTable" class="table table-bordered p4-table">
+            <thead>
+                <tr>
+                    <th>门店</th>
+                    <th>产品编号</th>
+                    <th>产品名称</th>
+                    <th>品类</th>
+                    <th>期初数量</th>
+                    <th>本月入库数</th>
+                    <th>本月出库数</th>
+                    <th>库存数量</th>
+                    <th>欠货数量</th>
+                    <th>实际库存数量</th>
+                    <th style="text-align:center;width:30px !important;min-width:30px !important;max-width:40px;"></th>
+                </tr>
+            </thead>
+            <tbody id="tb" class="tbody">
+                <%data.map(function(el,index){%>
+                    <tr data-id="<%=el.productId%>">
+                        <td class="text">
+                            <%=el.organizationName%>
+                        </td>
+                        <td class="text">
+                            <%=el.numberCode%>
+                        </td>
+                        <td class="text">
+                            <%=el.productName%>
+                        </td>
+                        <td class="text">
+                            <%=el.categoryName%>
+                        </td>
+                        <td class="num">
+                            <%=el.beginNum%>
+                        </td>
+                        <td class="num">
+                            <%=el.entryNum%>
+                        </td>
+                        <td class="num">
+                            <%=el.deliveryNum%>
+                        </td>
+                        <td class="num">
+                            <%=el.restNum%>
+                        </td>
+                        <td class="num">
+                            <%=el.surplusQuantity%>
+                        </td>
+                        <td class="num">
+                            <%=el.realRestNum%>
+                        </td>
+                        <td text-center td-more><i class="iconfont">&#xe6a7;</i> </td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+    </script>
+    <!--end 库存报表-->
+    <!--start 库存报表详情-->
+    <script type="text/template" id="inventoryDetailReport-tpl">
+        <table id="fixTable" class="table table-bordered p4-table">
+            <thead>
+                <tr>
+                    <th>交易类别</th>
+                    <th>门店</th>
+                    <th>单据编号</th>
+                    <th>单据日期</th>
+                    <th>产品单位</th>
+                    <th>交易数量</th>
+                </tr>
+            </thead>
+            <tbody id="tb" class="tbody">
+                <%data.map(function(el,index){%>
+                    <tr>
+                        <td class="text">
+                            <%=el.orderType%>
+                        </td>
+                        <td class="text">
+                            <%=el.organizationName%>
+                        </td>
+                        <td class="text">
+                            <%=el.orderNo%>
+                        </td>
+                        <td class="text">
+                            <%=el.orderDate%>
+                        </td>
+                        <td class="text">
+                            <%=el.unitName%>
+                        </td>
+                        <td class="text">
+                            <%=el.quantity%>
+                        </td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+    </script>
+    <!--end 库存报表详情-->
+    <!--start 分仓库库存报表-->
+    <script type="text/template" id="storageInventoryReport-tpl">
+        <table id="fixTable" class="table table-bordered p4-table">
+            <thead>
+                <tr>
+                    <th>门店</th>
+                    <th>产品名称</th>
+                    <th>产品品类</th>
+                    <th>仓库</th>
+                    <th>期初数量</th>
+                    <th>本月入库数</th>
+                    <th>本月出库数</th>
+                    <th>库存数量</th>
+                    <th style="text-align:center;width:30px !important;min-width:30px !important;max-width:40px;"></th>
+                </tr>
+            </thead>
+            <tbody id="tb" class="tbody">
+                <%data.map(function(el,index){%>
+                    <tr data-id="<%=el.productId%>" data-storageid="<%=el.storageId%>">
+                        <td class="text">
+                            <%=el.organizationName%>
+                        </td>
+                        <td class="text">
+                            <%=el.productName%>
+                        </td>
+                        <td class="text">
+                            <%=el.categoryName%>
+                        </td>
+                        <td class="text">
+                            <%=el.storageName%>
+                        </td>
+                        <td class="num">
+                            <%=el.beginNum%>
+                        </td>
+                        <td class="num">
+                            <%=el.entryNum%>
+                        </td>
+                        <td class="num">
+                            <%=el.deliveryNum%>
+                        </td>
+                        <td class="num">
+                            <%=el.restNum%>
+                        </td>
+                        <td text-center td-more><i class="iconfont">&#xe6a7;</i> </td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+    </script>
+    <!--end 分仓库库存报表-->
+    <!--start 分仓库库存报表详情-->
+    <script type="text/template" id="storageInventoryDetailReport-tpl">
+        <table id="fixTable" class="table table-bordered p4-table">
+            <thead>
+                <tr>
+                    <th>交易类别</th>
+                    <th>门店</th>
+                    <th>单据编号</th>
+                    <th>单据日期</th>
+                    <th>产品单位</th>
+                    <th>交易数量</th>
+                </tr>
+            </thead>
+            <tbody id="tb" class="tbody">
+                <%data.map(function(el,index){%>
+                    <tr>
+                        <td class="text">
+                            <%=el.orderType%>
+                        </td>
+                        <td class="text">
+                            <%=el.organizationName%>
+                        </td>
+                        <td class="text">
+                            <%=el.orderNo%>
+                        </td>
+                        <td class="text">
+                            <%=el.orderDate%>
+                        </td>
+                        <td class="text">
+                            <%=el.unitName%>
+                        </td>
+                        <td class="text">
+                            <%=el.quantity%>
+                        </td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+    </script>
+    <!--end 分仓库库存报表详情-->
     <script type="text/template" id="keywords-tpl">
         <div class="dropdown">筛选:<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><em class="currentItem"><%=keyWords[0]%></em></button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -3095,23 +3313,23 @@
     <!-- start excel导出需要的库-->
     <div id="hook"></div>
     <script>
-        function create_script_element(src,existingnode){
+        function create_script_element(src, existingnode) {
             var script = document.createElement('script');
-            script.src = 'http://indevtest.oss-cn-shenzhen.aliyuncs.com/'+src;
+            script.src = 'http://indevtest.oss-cn-shenzhen.aliyuncs.com/' + src;
             $hook.appendChild(script);
 
         }
-        var $hook = document.getElementById('hook');  
+        var $hook = document.getElementById('hook');
         var scripts = [
             'shim.js',
             'xlsx.full.min.js',
-            'Blob.js','FileSaver.js','swfobject.js','downloadify.min.js','base64.min.js']
-        if(!/android|iphone|ipad/.test(navigator.userAgent.toLowerCase())){
-            scripts.map(function(el){
-                create_script_element(el,$hook);
+            'Blob.js', 'FileSaver.js', 'swfobject.js', 'downloadify.min.js', 'base64.min.js'
+        ]
+        if (!/android|iphone|ipad/.test(navigator.userAgent.toLowerCase())) {
+            scripts.map(function(el) {
+                create_script_element(el, $hook);
             })
         }
-        
     </script>
     <!--<script src="http://indevtest.oss-cn-shenzhen.aliyuncs.com/shim.js"></script>-->
     <!--<script src="http://indevtest.oss-cn-shenzhen.aliyuncs.com/xlsx.full.min.js"></script>-->
@@ -3120,7 +3338,7 @@
     <script src="http://indevtest.oss-cn-shenzhen.aliyuncs.com/swfobject.js"></script>
     <script src="http://indevtest.oss-cn-shenzhen.aliyuncs.com/downloadify.min.js"></script>
     <script src="http://indevtest.oss-cn-shenzhen.aliyuncs.com/base64.min.js"></script>-->
-    <!-- end  -->  
+    <!-- end  -->
     <script src="dist/js/report/exportexcel.js?v=1.0.0"></script>
 </body>
 

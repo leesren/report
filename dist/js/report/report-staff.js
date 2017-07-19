@@ -9,7 +9,7 @@
         var MILI_PATTERN = /(?=(?!\b)(\d{3})+\.?\b)/g;
 
         return function(num) {
-            if ( !isNaN(+num) && !window.excle) {
+            if (!isNaN(+num) && !window.excle) {
                 return num && num.toString().replace(DIGIT_PATTERN, function(m) {
                     return m.replace(MILI_PATTERN, ",");
                 });
@@ -111,7 +111,7 @@
             }
             this.$el.html(this.template({
                 data: temp,
-                excle:false
+                excle: false
             }));
             return this;
         },
@@ -695,7 +695,57 @@
             }
         }
     });
+    var totalInventoryReportView = BaseView.extend({ // 产品总库存
+        template: _.template($('#totalInventoryReport-tpl').html()),
+        events: {
+            'tap tbody tr': 'showDetailBtn',
+            'tap thead .sortable': 'sortField',
+        },
+        showDetailBtn: function(e) {
+            var productId = $(e.currentTarget).data("id");
+            var start = $('.startTime').val();
+            var hash = '&productId=' + productId + '&start=' + start + '&tpl=inventoryDetailReport';
+            var url = window.location.href.substring(0, window.location.href.indexOf('&tpl')) + hash;
+            if (!device().isMobile) {
+                window.location.href = url;
+            } else {
+                window.JsCallNativeBridge('openReportDetailView', [{
+                    title: '产品交易明细报表',
+                    url: url
+                }]); // 调用原生
+            }
 
+        }
+    });
+    var inventoryDetailReportView = BaseView.extend({ // 产品库存详情
+        template: _.template($('#inventoryDetailReport-tpl').html()),
+    });
+    var storageInventoryReportView = BaseView.extend({ // 产品分仓库库存
+        template: _.template($('#storageInventoryReport-tpl').html()),
+        events: {
+            'tap tbody tr': 'showDetailBtn',
+            'tap thead .sortable': 'sortField',
+        },
+        showDetailBtn: function(e) {
+            var productId = $(e.currentTarget).data("id");
+            var storageId = $(e.currentTarget).data("storageid");
+            var start = $('.startTime').val();
+            var hash = '&productId=' + productId + '&storageId=' + storageId + '&start=' + start + '&tpl=storageInventoryDetailReport';
+            var url = window.location.href.substring(0, window.location.href.indexOf('&tpl')) + hash;
+            if (!device().isMobile) {
+                window.location.href = url;
+            } else {
+                window.JsCallNativeBridge('openReportDetailView', [{
+                    title: '产品交易明细报表',
+                    url: url
+                }]); // 调用原生
+            }
+
+        }
+    });
+    var storageInventoryDetailReportView = BaseView.extend({ // 产品库存详情
+        template: _.template($('#storageInventoryDetailReport-tpl').html()),
+    });
     var viewList = [{ // 员工 列表
             name: 'reportEmp',
             view: StaffView
@@ -818,6 +868,18 @@
         }, { // 客户临时转店消费记录视图
             name: 'customerTransOrdersReport',
             view: customerTransOrdersReportView
+        }, { // 产品总库存
+            name: 'totalInventoryReport',
+            view: totalInventoryReportView
+        }, { // 产品总库存详情
+            name: 'inventoryDetailReport',
+            view: inventoryDetailReportView
+        }, { // 产品分仓库库存
+            name: 'storageInventoryReport',
+            view: storageInventoryReportView
+        }, { // 产品分仓库库存详情
+            name: 'storageInventoryDetailReport',
+            view: storageInventoryDetailReportView
         }
 
     ];
@@ -875,7 +937,7 @@
             if (list.length != 0) {
                 try {
                     var template = _.template($('#fixed-coloum-tpl').html(), { variable: 'data' });
-                    var html = template({ list: list, excle:true });
+                    var html = template({ list: list, excle: true });
                     $(html).insertBefore("#fixTable");
                     $('.first-coloum-wrap').css("width", $('.fixed-coloum-header')[0].clientWidth + 'px');
                     $('.t-header').text($('.table .fixed-coloum-header').text());
@@ -1050,6 +1112,7 @@
             var start = $('.startTime').val();
             var end = $('.endTime').val();
             var searchCheckbox = !$(".searchCheckbox input").is(':checked');
+            console.log('时间' + start);
             // 时间限制
             // if(this.limitTime(start,end)){ 
             // 	return ;
@@ -1135,7 +1198,7 @@
 
             var me = this;
             this.setConfig(reportApi);
-            if(location.hash.indexOf('#search') != -1) return;
+            if (location.hash.indexOf('#search') != -1) return;
             this.loadData(url, body, function() {}, function(data) {
                 me.data = data;
                 app = window.$app = new App({
@@ -1156,6 +1219,7 @@
             var isShowTime = config.showTime;
             var isShowCheckbox = config.showCheckbox;
             var isShowTip = config.showTip;
+            var isShowMonth = config.showMonth;
 
             var className = (isShowSearch ? '' : 'hidden');
             var isShowTimeClass = (isShowTime || isShowTime === undefined ? '' : 'hidden');
@@ -1164,6 +1228,9 @@
             $('.time-label').addClass(className);
             if (isShowTimeClass === 'hidden') {
                 $('.table-nav .time-text').remove();
+            }
+            if (isShowMonth) {
+                $('.table-nav .month-text').removeClass('none');
             }
             $('.table-nav .time-text').addClass(isShowTimeClass);
             if (config.keyWord && config.keyWord.length > 0) {
@@ -1191,7 +1258,10 @@
                 $('.startTime').val(time.start);
                 $('.endTime').val(time.end);
             }
-
+            if (config.time == 'thisMonth') {
+                var time = reportApi[reportApi.tpl].body.data;
+                $('.startTime').val(time.month);
+            }
         },
         pageTuring: function(index) {
             var currentSortIndex;
@@ -1380,6 +1450,7 @@
             }
             var config = reportApi[reportApi.tpl];
             var isShowTime = config.searchConfig.showTime;
+            var isShowMonth = config.searchConfig.showMonth;
             var isShowSearch = config.searchConfig.showKeyWord;
 
 
@@ -1391,6 +1462,12 @@
             } else {
                 delete body.data.start;
                 delete body.data.end;
+            }
+            if (isShowMonth) {
+                body.data.month = start;
+                $('.startTime').val(start);
+            } else {
+                delete body.data.month;
             }
             if (!isShowSearch) { // 是否删除 关键字 参数
                 delete body.data.keyWord;
@@ -1414,18 +1491,18 @@
                     // }else{
 
                     // }
-                    me.data = result; 
-                    if(!window.$app){
+                    me.data = result;
+                    if (!window.$app) {
                         app = window.$app = new App({
                             data: result
                         });
                     }
-                    
+
                     app.hasRender = false;
                     app.initData(me.data);
                     app.render(1, me.data);
                 } else {
-                    if(!window.$app){
+                    if (!window.$app) {
                         app = window.$app = new App({
                             data: result
                         });
