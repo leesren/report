@@ -311,6 +311,30 @@
             }
 
         },
+        reportProductDetail: { // 产品汇总详情
+            url: uri + 'api/doReport/reportCustomerProduct',
+            body: {
+                'data': {
+                    'id': (map.id === undefined ? '' : map.id),
+                    'storeId': (map.storeId === undefined ? '' : map.storeId),
+                    'start': (map.start === undefined ? day.startTime : map.start),
+                    'end': (map.end === undefined ? day.endTime : map.end),
+                }
+            },
+            summary: {
+                key: ['购买金额', '购买数量', '消耗数量'],
+                value: ['sales', 'sellNumber', 'consumeNumber']
+            },
+            searchConfig: {
+                showKeyWord: false,
+                showTime: false,
+                searchBtn: false
+            },
+            note: {
+                text: noteText
+            }
+
+        },
         reportCard: { //卡项负债
             url: uri + 'api/doReport/reportCard',
             body: {
@@ -1191,11 +1215,11 @@
                 value: []
             },
             searchConfig: {
-                showTime: false,
-                showMonth: true,
-                showKeyWord: false,
+                showTime: true,
+                showKeyWord: true,
                 showSelect: true,
-                time: 'thisMonth'
+                time: 'week',
+                keyWord: ['产品名称']
             },
             note: {
                 text: noteText

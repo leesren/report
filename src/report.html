@@ -867,12 +867,12 @@
                     <th class="sortable" data-sort="sales">销售业绩</th>
                     <th class="sortable" data-sort="consumes">消耗业绩</th>
                     <th>备注</th>
-
+                    <th style="text-align:center;width:30px !important;min-width:30px !important;max-width:40px;"></th>
                 </tr>
             </thead>
             <tbody id="tb" class="tbody">
                 <%data.map(function(el,index){%>
-                    <tr>
+                    <tr data-name="<%=el.name%>" data-id="<%=el.id%>">
                         <td class="text">
                             <%=el.name%>
                         </td>
@@ -895,6 +895,7 @@
                             <%=miliFormat(((el.consumes-0).toFixed(2)-0))%>
                         </td>
                         <td class="text">-</td>
+                        <td text-center td-more><i class="iconfont">&#xe6a7;</i> </td>
                     </tr>
                     <%});%>
             </tbody>
@@ -919,7 +920,7 @@
                             <%=el.name%>
                         </td>
                         <td class="num">
-                            <%=miliFormat(((el.price-0).toFixed(2)-0))%>
+                            <%=miliFormat(((el.sales-0).toFixed(2)-0))%>
                         </td>
                         <td class="num">
                             <%=miliFormat(((el.sellNumber-0).toFixed(2)-0))%>
@@ -2677,54 +2678,54 @@
                 <tbody id="tb" class="tbody">
                     <%data.map(function(el,index){%>
 
-                        <%
+                        <!-- <%
                                 if(el.lv != '0'){
-                                        %>
-                            <tr data-orgid="<%=el.orgId%>" data-id="<%=el.id%>" data-name="<%=el.orgName%>" data-lv="<%=el.lv%>">
-                                <%
+                                        %>  -->
+                        <tr data-orgid="<%=el.orgId%>" data-id="<%=el.id%>" data-name="<%=el.name%>" data-orgname="<%=el.orgName%>" data-lv="<%=el.lv%>">
+                            <!-- <%
                                 }else{
                                         %>
                                     <tr>
                                         <%
                                 }
-                      %>
+                      %>  -->
 
-                                            <td class="text">
-                                                <%=el.name%>
-                                            </td>
-                                            <td class="text">
-                                                <%=el.orgName%>
-                                            </td>
-                                            <td class="text">
-                                                <%=el.productType%>
-                                            </td>
-                                            <td class="num">
-                                                <%=miliFormat(((el.price-0).toFixed(2)-0))%>
-                                            </td>
-                                            <td class="num">
-                                                <%=miliFormat(((el.sellNumber-0).toFixed(2)-0))%>
-                                            </td>
-                                            <td class="num">
-                                                <%=miliFormat(((el.consumeNumber-0).toFixed(2)-0))%>
-                                            </td>
-                                            <td class="num">
-                                                <%=miliFormat(((el.sales-0).toFixed(2)-0))%>
-                                            </td>
-                                            <td class="num">
-                                                <%=miliFormat(((el.consumes-0).toFixed(2)-0))%>
-                                            </td>
-                                            <td class="text">-</td>
-                                            <td text-center td-more>
-                                                <%
+                            <td class="text">
+                                <%=el.name%>
+                            </td>
+                            <td class="text">
+                                <%=el.orgName%>
+                            </td>
+                            <td class="text">
+                                <%=el.productType%>
+                            </td>
+                            <td class="num">
+                                <%=miliFormat(((el.price-0).toFixed(2)-0))%>
+                            </td>
+                            <td class="num">
+                                <%=miliFormat(((el.sellNumber-0).toFixed(2)-0))%>
+                            </td>
+                            <td class="num">
+                                <%=miliFormat(((el.consumeNumber-0).toFixed(2)-0))%>
+                            </td>
+                            <td class="num">
+                                <%=miliFormat(((el.sales-0).toFixed(2)-0))%>
+                            </td>
+                            <td class="num">
+                                <%=miliFormat(((el.consumes-0).toFixed(2)-0))%>
+                            </td>
+                            <td class="text">-</td>
+                            <td text-center td-more>
+                                <!-- <%
                                             if(el.lv != '0'){
-                                                    %>
-                                                    <i class="iconfont">&#xe6a7;</i>
-                                                    <%
+                                                    %> -->
+                                <i class="iconfont">&#xe6a7;</i>
+                                <!-- <%
                                             }
-                            %>
-                                            </td>
-                                    </tr>
-                                    <%});%>
+                            %> -->
+                            </td>
+                        </tr>
+                        <%});%>
                 </tbody>
         </table>
     </script>

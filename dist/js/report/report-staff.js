@@ -208,9 +208,36 @@
     });
 
     var ReportProductView = BaseView.extend({ // 产品汇总 视图
-        template: _.template($('#reportProduct-tpl').html())
+        template: _.template($('#reportProduct-tpl').html()),
+        events: {
+            'tap tbody tr': 'showDetail',
+            'tap thead .sortable': 'sortField',
+        },
+        showDetail: function(e) {
+            if (e.currentTarget.tagName.toLowerCase() == 'tr') {
+                var start = $('.startTime').val();
+                var end = $('.endTime').val();
+                var name = $(e.currentTarget).data('name');
+                var id = $(e.currentTarget).data('id');
+                var storeId = reportApi.queryString.storeId;
+                var hash = '&storeId=' + storeId + '&tpl=reportProductDetail' + "&id=" + id + "&start=" + start + "&end=" + end;
+                var href = window.location.href.substring(0, window.location.href.indexOf('?')) + "?" + hash;
+                if (!device().isMobile) {
+                    window.location.href = href;
+                } else {
+                    window.JsCallNativeBridge('openReportDetailView', [{
+                        title: name,
+                        url: href
+                    }]); // 调用原生
+                    // window.location.href =   href;
+                }
+            }
+        }
     });
 
+    var ReportProductDetailView = BaseView.extend({ // 产品汇总详情 视图
+        template: _.template($('#reportProductDetail-tpl').html())
+    });
     var ReportTotalDebtView = BaseView.extend({ // 客户负债 视图
         template: _.template($('#reportTotalDebt-tpl').html())
     });
@@ -585,14 +612,20 @@
                 var start = $('.startTime').val();
                 var end = $('.endTime').val();
                 var name = $(e.currentTarget).data('name');
+                var orgName = $(e.currentTarget).data('orgname');
                 var lv = $(e.currentTarget).data('lv');
-                var hash = 'organizationId=' + orgid + '&tpl=areaReportProduct&isFirst=0&id=' + id + "&start=" + start + "&end=" + end;
+                if (lv != '0') {
+                    var hash = 'organizationId=' + orgid + '&tpl=areaReportProduct&isFirst=0&id=' + id + "&start=" + start + "&end=" + end;
+                } else {
+                    var hash = '&storeId=' + orgid + '&tpl=reportProductDetail' + "&id=" + id + "&start=" + start + "&end=" + end;
+                }
                 var href = window.location.href.substring(0, window.location.href.indexOf('?')) + '?' + hash;
                 if (!device().isMobile) {
                     window.location.href = href;
                 } else {
                     window.JsCallNativeBridge('openReportDetailView', [{
                         title: name,
+                        orgName: orgName,
                         url: href
                     }]); // 调用原生
                     // window.location.href =   href;
@@ -772,6 +805,9 @@
         }, { // 产品汇总
             name: 'reportProduct',
             view: ReportProductView
+        }, { // 产品汇总详情
+            name: 'reportProductDetail',
+            view: ReportProductDetailView
         }, { // 卡项负债
             name: 'reportCard',
             view: ReportCardView
@@ -1265,6 +1301,7 @@
             var isShowCheckbox = config.showCheckbox;
             var isShowTip = config.showTip;
             var isShowMonth = config.showMonth;
+            var isSearch = config.searchBtn;
 
             var className = (isShowSearch ? '' : 'hidden');
             var isShowTimeClass = (isShowTime || isShowTime === undefined ? '' : 'hidden');
@@ -1309,6 +1346,9 @@
             }
             if (config.showSelect) {
                 $('.select-box').removeClass("none");
+            }
+            if (config.searchBtn === false) {
+                $('.searchByTime').hide();
             }
         },
         pageTuring: function(index) {
