@@ -748,6 +748,9 @@
     var storageInventoryDetailReportView = BaseView.extend({ // 产品库存详情
         template: _.template($('#storageInventoryDetailReport-tpl').html()),
     });
+    var goodsTradeReportView = BaseView.extend({ // 产品交易查询报表详情
+        template: _.template($('#goodsTradeReport-tpl').html()),
+    });
     var viewList = [{ // 员工 列表
             name: 'reportEmp',
             view: StaffView
@@ -882,10 +885,15 @@
         }, { // 产品分仓库库存详情
             name: 'storageInventoryDetailReport',
             view: storageInventoryDetailReportView
+        }, { // 产品交易查询报表详情
+            name: 'goodsTradeReport',
+            view: goodsTradeReportView
         }
 
     ];
 
+    var result = [];
+    var resultVal = [];
     var App = Backbone.View.extend({
         el: 'body',
         initialize: function(obj) {
@@ -900,7 +908,9 @@
         events: {
             'tap .sortItem .keyItems': 'selectSortItem',
             'tap .searchByTime': 'search',
-            'tap .searchCheckbox': 'searchCheckbox'
+            'tap .searchCheckbox': 'searchCheckbox',
+            'tap .selected': 'showType',
+            'tap .option': 'selectType',
         },
         selectSortItem: function(e) {
             $('.currentItem').text($(e.target).html());
@@ -916,6 +926,32 @@
                 data[checkboxParam] = showCheckbox.checkVal;
             }
 
+        },
+        showType: function(e) {
+            $('.select').toggleClass('none');
+            $('.selected').toggleClass('more');
+        },
+        selectType: function(e) {
+            var text = $(e.target).text();
+            $(e.target).toggleClass('on');
+            if ($(e.target).hasClass('on')) {
+                result.push(text);
+                resultVal.push($(e.target).attr('value'))
+            } else {
+                var index = result.indexOf(text);
+                if (index > -1) {
+                    result.splice(index, 1);
+                    resultVal.splice(index, 1);
+                }
+            }
+            $('.selected').text(result.join(','));
+            $('.selected').attr('value', resultVal.join(','));
+            if (!$('.selected').text()) {
+                $('.selected').text('全部');
+                $('.selected').attr('value', '0');
+            }
+            console.log($('.selected').text());
+            console.log($('.selected').attr('value'));
         },
         render: function(pageIndex, data) {
             this.summary(data.data);
@@ -1113,14 +1149,21 @@
             var sortItem = $('.currentItem').text();
             var start = $('.startTime').val();
             var end = $('.endTime').val();
+            var selected = $('.selected').attr('value');
             var searchCheckbox = !$(".searchCheckbox input").is(':checked');
+            var data = reportApi[reportApi.tpl].body.data;
+            if (reportApi.tpl == 'goodsTradeReport') {
+                data['select'] = selected;
+                $('.select').addClass('none');
+                $('.selected').removeClass('more');
+            }
             console.log('时间' + start);
             // 时间限制
             // if(this.limitTime(start,end)){ 
             // 	return ;
             // }
             //console.log(start+' '+end + ' '+sortItem + ' '+searchKey);
-            var hash = 'search/' + (searchKey.trim() ? searchKey.trim() : undefined) + '/' + sortItem + '/' + start + '/' + end + '/' + searchCheckbox;
+            var hash = 'search/' + (searchKey.trim() ? searchKey.trim() : undefined) + '/' + sortItem + '/' + start + '/' + end + '/' + selected + '/' + searchCheckbox;
             appRouter.navigate(hash, {
                 trigger: true,
                 replace: false
@@ -1213,7 +1256,7 @@
             '': 'loadData',
             'order/desc/:field': 'descOrder',
             'order/asc/:field': 'ascOrder',
-            'search/:searchKey/:searchField/:searchCheckbox/:start/:end': 'search'
+            'search/:searchKey/:searchField/:selected/:searchCheckbox/:start/:end': 'search'
         },
         setConfig: function(ops) { // 配置模块
             var config = reportApi[reportApi.tpl].searchConfig;
@@ -1263,6 +1306,9 @@
             if (config.time == 'thisMonth') {
                 var time = reportApi[reportApi.tpl].body.data;
                 $('.startTime').val(time.month);
+            }
+            if (config.showSelect) {
+                $('.select-box').removeClass("none");
             }
         },
         pageTuring: function(index) {

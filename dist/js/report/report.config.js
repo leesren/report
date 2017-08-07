@@ -1174,6 +1174,32 @@
             note: {
                 text: noteText
             }
+        },
+        goodsTradeReport: { // 产品交易查询报表详情
+            url: uri + 'api/doWareHouse/monthInvertoryDetailByStorage',
+            body: {
+                data: {
+                    storageId: (map.storageId === undefined ? '' : map.storageId),
+                    organizationId: (map.organizationId === undefined ? '' : map.organizationId),
+                    productId: (map.productId === undefined ? '' : map.productId),
+                    month: (map.start === undefined || map.start === 'undefined' ? thisMonth : map.start),
+                    keyWord: ""
+                }
+            },
+            summary: {
+                key: [],
+                value: []
+            },
+            searchConfig: {
+                showTime: false,
+                showMonth: true,
+                showKeyWord: false,
+                showSelect: true,
+                time: 'thisMonth'
+            },
+            note: {
+                text: noteText
+            }
         }
 
     };

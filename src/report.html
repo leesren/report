@@ -229,6 +229,57 @@
             color: red!important;
         }
         
+        .select-box {
+            position: relative;
+            margin-left: 10px;
+        }
+        
+        .selected {
+            min-width: 50px;
+            max-width: 150px;
+            height: 28px;
+            line-height: 28px;
+            color: #d6ae76;
+            border: 1px solid #e4cdae;
+            padding: 0 25px 0 10px;
+        }
+        
+        .selected:after {
+            content: '';
+            position: absolute;
+            top: 12px;
+            right: 8px;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 7px solid #e4cdae;
+        }
+        
+        .selected.more:after {
+            border-top: none;
+            border-bottom: 7px solid #e4cdae;
+        }
+        
+        .select {
+            position: absolute;
+            top: 29px;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            outline: 1px solid #e4cdae;
+            background-color: white;
+            text-align: center;
+        }
+        
+        .option {
+            padding: 3px 0;
+        }
+        
+        .option.on {
+            color: #d6ae76;
+        }
+        
         @media screen and (min-width: 1024px) {
             .main-wraper .table-nav .end-time input,
             .main-wraper .table-nav .start-time input {
@@ -262,6 +313,20 @@
                         <span class="start-label">月份</span>
                     <div class="start-time"><span><input type="month" value="" min="1990-01" max="2030-12"  class="startTime" ></span><em><i class="iconfont">&#xe6a7;</i></em></div>
                     </span>
+                    <div class="select-box none">
+                        <div class="selected" value="0">全部 </div>
+                        <ul class="select none">
+                            <li class="option" value="111">正常入库</li>
+                            <li class="option" value="22">盘盈入库</li>
+                            <li class="option" value="33">调拨入库</li>
+                            <li class="option" value="44">退货入库</li>
+                            <li class="option" value="55">正常出库</li>
+                            <li class="option" value="66">盘亏出库</li>
+                            <li class="option" value="77">调拨出库</li>
+                            <li class="option" value="88">取货出库</li>
+                            <li class="option" value="99">配料出库</li>
+                        </ul>
+                    </div>
                     <label class="searchCheckbox none" for="searchCheckbox">
                         <input type="checkbox" id="searchCheckbox">
                         <span>只显示美容师与顾问</span>
@@ -836,6 +901,38 @@
         </table>
     </script>
     <!--end产品汇总-->
+    <!--start产品汇总详情-->
+    <script type="text/template" id="reportProductDetail-tpl">
+        <table id="fixTable" class="table table-bordered p4-table">
+            <thead>
+                <tr>
+                    <th>客户姓名</th>
+                    <th>购买金额</th>
+                    <th>购买数量</th>
+                    <th>消耗数量</th>
+                </tr>
+            </thead>
+            <tbody id="tb" class="tbody">
+                <%data.map(function(el,index){%>
+                    <tr>
+                        <td class="text">
+                            <%=el.name%>
+                        </td>
+                        <td class="num">
+                            <%=miliFormat(((el.price-0).toFixed(2)-0))%>
+                        </td>
+                        <td class="num">
+                            <%=miliFormat(((el.sellNumber-0).toFixed(2)-0))%>
+                        </td>
+                        <td class="num">
+                            <%=miliFormat(((el.consumeNumber-0).toFixed(2)-0))%>
+                        </td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+    </script>
+    <!--end产品汇总详情-->
     <!--start卡项负债-->
     <script type="text/template" id="reportCard-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -3258,6 +3355,60 @@
         </table>
     </script>
     <!--end 分仓库库存报表详情-->
+    <!--start 产品交易查询报表详情-->
+    <script type="text/template" id="goodsTradeReport-tpl">
+        <table id="fixTable" class="table table-bordered p4-table">
+            <thead>
+                <tr>
+                    <th>门店</th>
+                    <th>单据编号</th>
+                    <th>单据日期</th>
+                    <th>交易类别</th>
+                    <th>产品编号</th>
+                    <th>产品名称</th>
+                    <th>产品品类</th>
+                    <th>产品单位</th>
+                    <th>交易数量</th>
+                </tr>
+            </thead>
+            <tbody id="tb" class="tbody">
+                <%data.map(function(el,index){%>
+                    <tr>
+                        <td class="text">
+                            <%=el.organizationName%>
+                        </td>
+                        <td class="text">
+                            <%=el.orderNo%>
+                        </td>
+                        <td class="text">
+                            <%=el.orderDate%>
+                        </td>
+                        <td class="text">
+                            <%=el.orderType%>
+                        </td>
+
+                        <td class="text">
+                            <%=el.numberCode%>
+                        </td>
+                        <td class="text">
+                            <%=el.productName%>
+                        </td>
+                        <td class="text">
+                            <%=el.categoryName%>
+                        </td>
+
+                        <td class="text">
+                            <%=el.unitName%>
+                        </td>
+                        <td class="text">
+                            <%=el.quantity%>
+                        </td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+    </script>
+    <!--end 产品交易查询报表详情-->
     <script type="text/template" id="keywords-tpl">
         <div class="dropdown">筛选:<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><em class="currentItem"><%=keyWords[0]%></em></button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
