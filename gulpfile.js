@@ -161,4 +161,8 @@ gulp.task('default',['server'],function(){
         gulp.src('./*.html')
             .pipe(connect.reload());
     });
+	gulp.watch('./dist/js/report/*.js').on('change', function (file) {
+        gulp.src('./*.html')
+            .pipe(connect.reload());
+    });
 });

@@ -123,7 +123,7 @@
             'device': (map.device ? map.device : ''),
             'sessionId': (map.sessionId ? map.sessionId : ''),
             'account': (map.account ? map.account : 'admin'),
-            'version': (map.version ? map.version : '1.0.0'),
+            'version': (map.version ? map.version : '8.0.0'),
         },
         queryString: map,
         tpl: map.tpl,
@@ -190,8 +190,9 @@
             url: uri + 'api/doReport/reportArrearDetail',
             body: {
                 data: {
-                    'empId': (map.empId === undefined ? '' : map.empId),
-                    'storeId': (map.storeId === undefined ? '' : map.storeId),
+                    'empId': (map.empId === undefined ? undefined : map.empId),
+                    'customerId': (map.customerId === undefined ? undefined : map.customerId),
+                    'storeId': (map.storeId === undefined ? undefined : map.storeId),
                     'keyWord': ''
                 }
             },
@@ -1200,14 +1201,17 @@
             }
         },
         goodsTradeReport: { // 产品交易查询报表详情
-            url: uri + 'api/doWareHouse/monthInvertoryDetailByStorage',
+            url: uri + 'api/doWareHouse/allTradeDetail',
             body: {
                 data: {
-                    storageId: (map.storageId === undefined ? '' : map.storageId),
-                    organizationId: (map.organizationId === undefined ? '' : map.organizationId),
-                    productId: (map.productId === undefined ? '' : map.productId),
-                    month: (map.start === undefined || map.start === 'undefined' ? thisMonth : map.start),
-                    keyWord: ""
+                    organizationList:[map.organizationId],
+                    keyword: "",
+                    'start': (map.start === undefined ? time.startTime : map.start),
+                    'end': (map.end === undefined ? time.endTime : map.end),
+                    'storageTypeIdList':null,
+                    "exportFlag":true,
+                    "page": 1,
+    	            "size": 20 
                 }
             },
             summary: {
@@ -1224,11 +1228,36 @@
             note: {
                 text: noteText
             }
-        }
+        },
+        customerArrearByDate: { // 客户欠款统计
+            url: uri + 'api/doReport/reportArrearByDate',
+            body: {
+                data: {
+                    "storeId": (map.storeId === undefined ? '' : map.storeId),
+                    'start': undefined,
+                    'end': (map.end === undefined ? time.endTime : map.end),
+                    "keyWord": ""
+                }
+            },
+            summary: {
+                key: [],
+                value: []
+            },
+            searchConfig: {
+                showTime: true,
+                showKeyWord: true,
+                time: 'today',
+                keyWord: ['客户名称']
+            },
+            note: {
+                text: noteText
+            }
+        },
 
     };
     initTime(api[api['tpl']].searchConfig.time);
     window.reportApi = api;
+    window.api_uri = uri;
 })(window);
 
 // &tpl=reportEmp // 员工报表

@@ -227,54 +227,7 @@
         
         .red {
             color: red!important;
-        }
-        
-        .select-box {
-            position: relative;
-            margin-left: 10px;
-        }
-        
-        .selected {
-            min-width: 50px;
-            max-width: 150px;
-            height: 28px;
-            line-height: 28px;
-            color: #d6ae76;
-            border: 1px solid #e4cdae;
-            padding: 0 25px 0 10px;
-        }
-        
-        .selected:after {
-            content: '';
-            position: absolute;
-            top: 12px;
-            right: 8px;
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 7px solid #e4cdae;
-        }
-        
-        .selected.more:after {
-            border-top: none;
-            border-bottom: 7px solid #e4cdae;
-        }
-        
-        .select {
-            position: absolute;
-            top: 29px;
-            left: 0;
-            width: 100%;
-            z-index: 10;
-            outline: 1px solid #e4cdae;
-            background-color: white;
-            text-align: center;
-        }
-        
-        .option {
-            padding: 3px 0;
-        }
+        } 
         
         .option.on {
             color: #d6ae76;
@@ -285,6 +238,88 @@
             .main-wraper .table-nav .start-time input {
                 min-width: 110px;
             }
+        }
+
+        .select {
+            display: inline-block;
+            max-width: 100%;
+            position: relative;
+            vertical-align: top
+        } 
+        .select.none {display: none}
+        ::selection {
+            background: #d6ae76; /* WebKit/Blink Browsers */
+        }
+        .select option{color: #d6ae76;}
+        .select:not(.is-multiple):after {
+            border: 1px solid #d6ae76;
+            border-right: 0;
+            border-top: 0;
+            content: " ";
+            display: block;
+            height: .5em;
+            pointer-events: none;
+            position: absolute;
+            -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+            width: .5em;
+            margin-top: -.5em;
+            right: .825em;
+            top: 50%;
+            z-index: 4
+        }
+
+        .select select {
+            
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            border: 1px solid transparent;
+            border-radius: 3px;
+            box-shadow: none;
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            font-size: 1rem; 
+            -webkit-box-pack: start;
+            -ms-flex-pack: start;
+            justify-content: flex-start;
+            line-height: 1.5;
+            padding: calc(.375em - 1px) calc(1.55em - 1px) calc(.375em - 1px) .65em;
+            position: relative;
+            vertical-align: top;
+            background-color: #fff;
+            border-color: #dbdbdb;
+            color: #363636;
+            cursor: pointer;
+            display: block;
+            font-size: 1em;
+            max-width: 100%;
+            outline: none
+        }
+
+        .select select.is-active,.select select.is-focused,.select select:active,.select select:focus {
+            outline: none
+        } 
+
+        .select select[disabled]::-webkit-input-placeholder {
+            color: hsla(0,0%,48%,.3)
+        }   
+        .select select:not([multiple]) {
+            padding-right: 2.5em
+        }
+
+        .select select[multiple] {
+            height: unset; 
+        }
+
+        .select select[multiple] option {
+            padding: .5em 1.5em .5em 1em;
+        } 
+        .select.is-grey select {
+            border-color: #ddd
         }
     </style>
 </head>
@@ -313,19 +348,10 @@
                         <span class="start-label">月份</span>
                     <div class="start-time"><span><input type="month" value="" min="1990-01" max="2030-12"  class="startTime" ></span><em><i class="iconfont">&#xe6a7;</i></em></div>
                     </span>
-                    <div class="select-box none">
-                        <div class="selected" value="0">全部 </div>
-                        <ul class="select none">
-                            <li class="option" value="111">正常入库</li>
-                            <li class="option" value="22">盘盈入库</li>
-                            <li class="option" value="33">调拨入库</li>
-                            <li class="option" value="44">退货入库</li>
-                            <li class="option" value="55">正常出库</li>
-                            <li class="option" value="66">盘亏出库</li>
-                            <li class="option" value="77">调拨出库</li>
-                            <li class="option" value="88">取货出库</li>
-                            <li class="option" value="99">配料出库</li>
-                        </ul>
+                    <div class="select is-grey none">
+                        <select name="types" id="types" multiple="multiple" size="5">
+                            
+                        </select>
                     </div>
                     <label class="searchCheckbox none" for="searchCheckbox">
                         <input type="checkbox" id="searchCheckbox">
@@ -624,8 +650,7 @@
                             <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end欠款详情-->
+    </script><!--end欠款详情-->
 
     <!--start员工消耗详情-->
     <script type="text/template" id="reportEmpComDetail-tpl">
@@ -2548,8 +2573,7 @@
                                 <%});%>
             </tbody>
         </table>
-    </script>
-    <!--start 区域分类汇总-->
+    </script><!--start 区域分类汇总-->
     <script type="text/template" id="areaReportCategory-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
             <%var temp = !data[0] ? {} : data[0];%>
@@ -2605,8 +2629,7 @@
                                     <%});%>
                 </tbody>
         </table>
-    </script>
-    <!--end 区域分类汇总-->
+    </script><!--end 区域分类汇总-->
 
     <!--start区域卡项负债-->
     <script type="text/template" id="areaReportCard-tpl">
@@ -2653,8 +2676,7 @@
                         <%});%>
                 </tbody>
             </table>
-    </script>
-    <!--end区域卡项负债-->
+    </script><!--end区域卡项负债-->
     <!--start区域产品汇总报表-->
     <script type="text/template" id="areaReportProduct-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -2728,8 +2750,7 @@
                         <%});%>
                 </tbody>
         </table>
-    </script>
-    <!--end区域产品汇总报表-->
+    </script><!--end区域产品汇总报表-->
     <!--start到店排行-->
     <script type="text/template" id="reportCustomerArrive-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -2770,8 +2791,7 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end到店排行-->
+    </script><!--end到店排行-->
 
     <!--start品牌体验券-->
     <script type="text/template" id="reportBrandCoupons-tpl">
@@ -2824,8 +2844,7 @@
                                 <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end品牌体验券-->
+    </script><!--end品牌体验券-->
 
     <!--start门店体验券-->
     <script type="text/template" id="reportStoreCoupons-tpl">
@@ -2877,8 +2896,7 @@
                                 <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end门店体验券-->
+    </script><!--end门店体验券-->
 
     <!--start门店体验券详情-->
     <script type="text/template" id="reportStoreCouponsDetail-tpl">
@@ -2910,8 +2928,7 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end门店体验券详情-->
+    </script><!--end门店体验券详情-->
 
     <!--start门店体验券消耗详情-->
     <script type="text/template" id="reportStoreCouponsConsumeDetail-tpl">
@@ -2971,8 +2988,7 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end门店体验券消耗详情-->
+    </script><!--end门店体验券消耗详情-->
 
     <!--start客户来源-->
     <script type="text/template" id="reportCustomerSource-tpl">
@@ -3008,8 +3024,7 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end客户来源-->
+    </script><!--end客户来源-->
     <!--start取货报表-->
     <script type="text/template" id="reportTakeGoods-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -3058,8 +3073,7 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end取货报表-->
+    </script><!--end取货报表-->
     <!--start取货报表详情-->
     <script type="text/template" id="reportTakeGoodsDetail-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -3106,8 +3120,7 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end取货报表详情-->
+    </script><!--end取货报表详情-->
     <!--start客户临时转店消费记录-->
     <script type="text/template" id="customerTransOrdersReport-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -3158,8 +3171,7 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end客户临时转店消费记录-->
+    </script><!--end客户临时转店消费记录-->
     <!--start库存报表-->
     <script type="text/template" id="totalInventoryReport-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -3216,8 +3228,7 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end 库存报表-->
+    </script><!--end 库存报表-->
     <!--start 库存报表详情-->
     <script type="text/template" id="inventoryDetailReport-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -3260,8 +3271,7 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end 库存报表详情-->
+    </script><!--end 库存报表详情-->
     <!--start 分仓库库存报表-->
     <script type="text/template" id="storageInventoryReport-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -3310,8 +3320,7 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end 分仓库库存报表-->
+    </script><!--end 分仓库库存报表-->
     <!--start 分仓库库存报表详情-->
     <script type="text/template" id="storageInventoryDetailReport-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -3354,8 +3363,7 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end 分仓库库存报表详情-->
+    </script><!--end 分仓库库存报表详情-->
     <!--start 产品交易查询报表详情-->
     <script type="text/template" id="goodsTradeReport-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -3408,11 +3416,41 @@
                     <%});%>
             </tbody>
         </table>
-    </script>
-    <!--end 产品交易查询报表详情-->
+    </script><!--end 产品交易查询报表详情-->
+
+    <!--start客户欠款统计-->
+    <script type="text/template" id="customerArrearByDate-tpl">
+        <table id="fixTable" class="table table-bordered p4-table">
+            <thead>
+                <tr class="head-nodata">
+                    <th>客户姓名</th>
+                    <th class="sortable" data-sort="rest">欠款金额</th>
+                    <th>组织名称</th> 
+                    <th td-more></th>
+                </tr>
+            </thead>
+            <tbody id="tb" class="tbody">
+                <%data.map(function(el,index){%>
+                    <tr data-id="<%=el.customerId%>" data-name="<%=el.name%>">
+                        <td class="text" padding-left-right>
+                            <%=el.name%>
+                        </td>
+                        <td class="num"text-center> 
+                            <%=miliFormat(((el.rest-0).toFixed(2)-0))%>
+                        </td>
+                        <td class="text" text-center>
+                            <%=el.storeName%>
+                        </td> 
+                        <td text-center td-more><i class="iconfont">&#xe6a7;</i></td>
+                    </tr>
+                    <%});%>
+            </tbody>
+        </table>
+    </script><!--end客户欠款统计-->
+    
     <script type="text/template" id="keywords-tpl">
         <div class="dropdown">筛选:<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><em class="currentItem"><%=keyWords[0]%></em></button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+            <ul class="dropdown-menu">
                 <%keyWords.map(function(el,index){%>
                     <li>
                         <a href="javascript:;" class="keyItems">

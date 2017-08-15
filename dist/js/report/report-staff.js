@@ -113,6 +113,7 @@
                 data: temp,
                 excle: false
             }));
+            
             return this;
         },
         sortField: function(e) {
@@ -781,8 +782,60 @@
     var storageInventoryDetailReportView = BaseView.extend({ // 产品库存详情
         template: _.template($('#storageInventoryDetailReport-tpl').html()),
     });
+    
     var goodsTradeReportView = BaseView.extend({ // 产品交易查询报表详情
         template: _.template($('#goodsTradeReport-tpl').html()),
+        beforemounted:function(obj){
+            var init_type = function(types){
+                var t = '<option class="option" value="null" selected>全部</option>';
+                types.data.forEach(function(el,index){
+                    t += '<option class="option" value="'+el.id+'">'+el.name+'</option>';
+                })
+                $('#types').html('').append(t);
+                document.getElementById('types').onchange = function(){
+                    var values = Array.prototype.slice.call(this.selectedOptions,0).map(function(v,i,a) { 
+                        return v.value; 
+                    });
+                    // alert( JSON.stringify( values));
+                    var ii = values.indexOf('null');
+                    if( values.length >= 1 && ii != -1){
+                        values.length = 0;
+                    }
+                    if(!values){  values.length = 0;}
+                    var body = reportApi[reportApi.tpl].body;
+                    body.data.storageTypeIdList = values.length ? values : null;
+                }
+            }
+              appRouter.loadData( window['api_uri'] + '/api/doWareHouse/listStorageOrderTypes',{},
+              function(){},
+              function(e){
+                  if(e.retCode === '000000' && e.data)
+                    init_type(e);
+              })  
+        } 
+    });
+    var customerArrearByDateView = BaseView.extend({ // 客户欠款时间统计
+        template: _.template($('#customerArrearByDate-tpl').html()),
+         events: {
+            'tap tbody tr': 'showDetailBtn',
+            'tap thead .sortable': 'sortField',
+        },
+        showDetailBtn: function(e) {
+            var id = $(e.currentTarget).data("id");
+            var name = $(e.currentTarget).data("name");
+            var end = $('.end').val();
+            var hash = '?customerId='+id+'&tpl=reportArrearDetail&endstore=true&name='+name;
+            var url = window.location.href.substring(0, window.location.href.indexOf('?')) + hash;
+            if (!device().isMobile) {
+                window.location.href = url;
+            } else {
+                window.JsCallNativeBridge('openReportDetailView', [{
+                    title: name + '欠款明细',
+                    url: url
+                }]); // 调用原生
+            }
+
+        }
     });
     var viewList = [{ // 员工 列表
             name: 'reportEmp',
@@ -921,9 +974,13 @@
         }, { // 产品分仓库库存详情
             name: 'storageInventoryDetailReport',
             view: storageInventoryDetailReportView
-        }, { // 产品交易查询报表详情
+        }
+        , { // 产品交易查询报表详情
             name: 'goodsTradeReport',
             view: goodsTradeReportView
+        }, { // 客户欠款时间统计
+            name: 'customerArrearByDate',
+            view: customerArrearByDateView
         }
 
     ];
@@ -986,8 +1043,8 @@
                 $('.selected').text('全部');
                 $('.selected').attr('value', '0');
             }
-            console.log($('.selected').text());
-            console.log($('.selected').attr('value'));
+            // console.log($('.selected').text());
+            // console.log($('.selected').attr('value'));
         },
         render: function(pageIndex, data) {
             this.summary(data.data);
@@ -1183,17 +1240,11 @@
             e.preventDefault();
             var searchKey = $('.searchKey').val();
             var sortItem = $('.currentItem').text();
-            var start = $('.startTime').val();
+            var start = $('.startTime').val() || undefined;
             var end = $('.endTime').val();
-            var selected = $('.selected').attr('value');
+            var selected = Date.now();
             var searchCheckbox = !$(".searchCheckbox input").is(':checked');
-            var data = reportApi[reportApi.tpl].body.data;
-            if (reportApi.tpl == 'goodsTradeReport') {
-                data['select'] = selected;
-                $('.select').addClass('none');
-                $('.selected').removeClass('more');
-            }
-            console.log('时间' + start);
+            var data = reportApi[reportApi.tpl].body.data; 
             // 时间限制
             // if(this.limitTime(start,end)){ 
             // 	return ;
@@ -1202,7 +1253,7 @@
             var hash = 'search/' + (searchKey.trim() ? searchKey.trim() : undefined) + '/' + sortItem + '/' + start + '/' + end + '/' + selected + '/' + searchCheckbox;
             appRouter.navigate(hash, {
                 trigger: true,
-                replace: false
+                replace: true
             });
             return false;
         },
@@ -1251,6 +1302,9 @@
                 }
             }
             var view = new View(ops);
+            if(view.beforemounted){// 提前处理
+                view.beforemounted();
+            }
             return view;
         },
         noDataView: function() {
@@ -1268,8 +1322,7 @@
 
     var Router = Backbone.Router.extend({
         initialize: function() {
-            this.data = {};
-
+            this.data = {}; 
             var index = reportApi.tpl.indexOf('#');
             if (index > 0) {
                 reportApi.tpl = reportApi.tpl.substring(0, reportApi.tpl.indexOf('#'));
@@ -1345,7 +1398,7 @@
                 $('.startTime').val(time.month);
             }
             if (config.showSelect) {
-                $('.select-box').removeClass("none");
+                $('.select').removeClass("none");
             }
             if (config.searchBtn === false) {
                 $('.searchByTime').hide();
