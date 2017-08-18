@@ -1157,7 +1157,8 @@
                         organizationId: (map.organizationId === undefined ? '' : map.organizationId)
                     }],
                     keyWord: "",
-                    month: (map.start === undefined ? thisMonth : map.start)
+                    month: (map.start === undefined ? thisMonth : map.start),
+                    houseId: null
                 }
             },
             summary: {
@@ -1204,14 +1205,14 @@
             url: uri + 'api/doWareHouse/allTradeDetail',
             body: {
                 data: {
-                    organizationList:[map.organizationId],
+                    organizationList: [map.organizationId],
                     keyword: "",
                     'start': (map.start === undefined ? time.startTime : map.start),
                     'end': (map.end === undefined ? time.endTime : map.end),
-                    'storageTypeIdList':null,
-                    "exportFlag":true,
+                    'storageTypeIdList': null,
+                    "exportFlag": true,
                     "page": 1,
-    	            "size": 20 
+                    "size": 20
                 }
             },
             summary: {
