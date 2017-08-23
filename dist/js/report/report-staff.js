@@ -1459,7 +1459,7 @@
             var body = this.assembling(reportApi, reportApi[reportApi.tpl]);
             var url = reportApi[reportApi.tpl].url;
             if (body.data.hasOwnProperty('page') && body.data.hasOwnProperty('size')) {
-                body.data.page = index;
+                body.data.page = +index;
                 var me = this;
                 this.loadData(url, body, function() {}, function(res) {
                     if (res && res.data) {
