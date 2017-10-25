@@ -1186,7 +1186,7 @@
                         <th rowspan="2">支付卡项</th>
                         <th rowspan="2">门店消耗业绩</th>
                         <th rowspan="2">赠送消耗</th>
-                        <th colspan="5" text-center>参与员工消耗业绩详情</th>
+                        <th colspan="6" text-center>参与员工消耗业绩详情</th>
                         <th rowspan="2">星级评分</th>
                         <th rowspan="2">专属顾问</th>
                         <th rowspan="2">专属技师</th>
@@ -1199,6 +1199,7 @@
                     </tr>
                     <tr>
                         <th>人员</th>
+                        <th>是否指定</th>
                         <th>职位</th>
                         <th>消耗业绩</th>
                         <th>消耗提成</th>
@@ -1244,13 +1245,19 @@
                                 <%=miliFormat(((el.giftConsume-0).toFixed(2)-0))%>
                             </td>
                             <td class="text"><span style="vertical-align: middle;"><%=emp.empName%></span>
-                                <%
+                                <!-- <%
                                      if(emp.isAppont == 1 ){
                                        %>
                                     <span style="color:#11cd6e">[指定]</span>
                                     <%
                                      }
-                                %>
+                                %> -->
+                            </td>
+                            <td class="text">
+                                <% if(emp.isAppont == 1 ){ %><span style="color:#11cd6e">是</span>
+                                    <%}else { %>
+                                        <span>否</span>
+                                        <%}%>
                             </td>
                             <td class="text">
                                 <%=emp.postType%>
@@ -1319,8 +1326,15 @@
                     %>
                             <tr class="<%=experienceCard%>">
                                 <td class="text"><span style="vertical-align: middle;"><%=emp.empName%></span>
-                                    <% if(emp.isAppont == 1 ){ %><span style="color:#11cd6e">[指定]</span>
-                                        <%}%>
+                                    <!-- <% if(emp.isAppont == 1 ){ %><span style="color:#11cd6e">[指定]</span>
+                                        <%}%> -->
+                                </td>
+                                <td class="text">
+                                    <% if(emp.isAppont == 1 ){ %>
+                                        <span style="color:#11cd6e">是</span>
+                                        <%}else { %>
+                                            <span>否</span>
+                                            <%}%>
                                 </td>
                                 <td class="text">
                                     <%=emp.postType%>
