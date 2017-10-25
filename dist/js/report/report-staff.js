@@ -729,11 +729,82 @@
             }
         }
     });
+    // 产品分类
+    var render_category = function(){
+        $('.categroy-body').removeClass('none');
+        var $el = document.getElementById('categroyInput');
+        $el.addEventListener('input',_.throttle(function(e){
+            var val = $(this).val();
+            if(!val){
+                $(this).attr('data-id','');
+                renderDom(window['_listCategory']);
+            }else if(window['_listCategory'] && val){ 
+                var fl = window['_listCategory'].filter(function(el){
+                    return el.name.indexOf(val) != -1
+                })
+                renderDom(fl);
+            }
+        },600),false)
+        $el.addEventListener('focus', function(e){
+            $('.categroy-wrap').removeClass('none');
+            var fl = $(this).val() ? window['_listCategory'].filter(function(el){
+                return el.name.indexOf($(this).val()) != -1
+            }) :  window['_listCategory'];
+            renderDom(fl);
+        } ,false)
+        $el.addEventListener('blur', function(e){
+            setTimeout(function(){
+                $('.categroy-wrap').addClass('none');
+            },300)
+        } ,false) 
+        var renderDom = function(result){
+            var html = [];
+            result.map(function(el){
+                html.push('<li style="padding:10px 12px;border-bottom:1px solid #eee" data-id="'+el.id+'" data-class-type="'+el.classType+'" data-name="'+el.name+'">'+el.name+'</li>')
+            })
+            $('.s-li').html(html.join(''));
+        }
+        var handle = function(e){
+            var result = [], list = e.data || [];
+            function all(l){
+            result.push(l.content);
+             if(l.children){ 
+               for(var i=0;i<l.children.length;i++){
+                  all(l.children[i])
+                }
+              }
+            }
+            
+            for(var i=0;i<list.length;i++){
+                 all( list[i]);
+            }
+            window['_listCategory'] = result;
+            renderDom(result);
+            $('.categroy-body').on('click','li',function(e){
+                e.stopPropagation();
+                console.log($(this).data());
+                var attr = $(this).data();
+                $el.value = attr.name;
+                $($el).attr('data-id',attr.id)
+                return false;
+            })
+        }
+        appRouter.post('/api/doWareHouse/listCategory',{orgId:reportApi.queryString.organizationId})
+        .then(function(e){
+            if(e.retCode === '000000'){
+                handle(e);
+                console.log('result===>',result); 
+            }
+        })
+    }
     var totalInventoryReportView = BaseView.extend({ // 产品总库存
         template: _.template($('#totalInventoryReport-tpl').html()),
         events: {
             'tap tbody tr': 'showDetailBtn',
             'tap thead .sortable': 'sortField',
+        },
+        beforemounted:function(){ 
+            render_category();
         },
         showDetailBtn: function(e) {
             var productId = $(e.currentTarget).data("id");
@@ -748,8 +819,7 @@
                     title: name + '交易明细',
                     url: url
                 }]); // 调用原生
-            }
-
+            } 
         }
     });
     var inventoryDetailReportView = BaseView.extend({ // 产品库存详情
@@ -762,6 +832,7 @@
             'tap thead .sortable': 'sortField',
         },
         beforemounted: function(obj) {
+            render_category();
             $('.store-select').show();
             var init_store = function(store) {
                 var t = '<option class="option" value="null">全部</option>';
@@ -866,9 +937,10 @@
         showDetailBtn: function(e) {
             var id = $(e.currentTarget).data("id");
             var name = $(e.currentTarget).data("name");
-            var end = $('.end').val();
-            var hash = '?customerId=' + id + '&tpl=reportArrearDetail&endstore=true&name=' + name;
+            var end = $('.endTime').val();
+            var hash = '?customerId=' + id + '&tpl=reportArrearDetail&endstore=true&name=' + name+'&end='+end;
             var url = window.location.href.substring(0, window.location.href.indexOf('?')) + hash;
+            if(!id) return;
             if (!device().isMobile) {
                 window.location.href = url;
             } else {
@@ -1280,8 +1352,12 @@
         },
         search: function(e) {
             e.preventDefault();
-            var searchKey = $('.searchKey').val();
+            var searchKey = $('.searchKey').val().trim() || undefined;
             var sortItem = $('.currentItem').text();
+            if(!$('.categroy-body').hasClass('none')){
+                sortItem = $('#categroyInput').attr('data-id') || undefined;
+                $('#categroyInput').blur()
+            } 
             var start = $('.startTime').val() || undefined;
             var end = $('.endTime').val();
             var selected = Date.now();
@@ -1292,7 +1368,7 @@
             // 	return ;
             // }
             //console.log(start+' '+end + ' '+sortItem + ' '+searchKey);
-            var hash = 'search/' + (searchKey.trim() ? searchKey.trim() : undefined) + '/' + sortItem + '/' + start + '/' + end + '/' + selected + '/' + searchCheckbox;
+            var hash = 'search/' + searchKey + '/' + sortItem + '/' + start + '/' + end + '/' + selected + '/' + searchCheckbox;
             appRouter.navigate(hash, {
                 trigger: true,
                 replace: true
@@ -1445,6 +1521,11 @@
             if (config.searchBtn === false) {
                 $('.searchByTime').hide();
             }
+            if(config.showStartTime === false){
+                $('.start-label').css({'visibility':'hidden'})
+                $('.time-text label').text('截止日期')
+                $('.start-time').css({'visibility':'hidden','pointer-events':'none'})
+            }
         },
         pageTuring: function(index) {
             var currentSortIndex;
@@ -1474,11 +1555,39 @@
             $($('thead th')[currentSortIndex]).addClass(cname);
         },
         assembling: function(reportApi, reportEmp) {
-            var body = reportEmp.body;
+            var body = _.assign({},reportEmp.body);
             for (var i in reportApi.base) {
                 body[i] = reportApi.base[i];
             }
             return body;
+        },
+        post:function(api,data){
+            return new Promise(function(resolve,reject){
+                var body = _.assign({},reportApi.base) ;
+                body.data = data;
+                $.ajax({
+                    timeout: 30000,
+                    data: JSON.stringify(body),
+                    url: api_uri+api,
+                    beforeSend: function(){},
+                    success: function(resp) {
+                        resolve(resp)
+                    },
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    type: 'POST',
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        if (textStatus == 'timeout') {
+                            console.error('timeout timeout timeout ...');
+                        }
+                        reject(textStatus);
+                    },
+                    complete: function() {
+    
+                    },
+                });
+            })
+            
         },
         loadData: function(url, body, loading, callback) {
             var data = this.assembling(reportApi, reportApi[reportApi.tpl]);
@@ -1631,6 +1740,9 @@
                 }
 
             }
+            if(reportApi.tpl === 'totalInventoryReport' || reportApi.tpl === 'storageInventoryReport'){
+                body.data.categoryId = searchField === 'undefined' ? '' : searchField;
+            }
             var config = reportApi[reportApi.tpl];
             var isShowTime = config.searchConfig.showTime;
             var isShowMonth = config.searchConfig.showMonth;
@@ -1701,6 +1813,6 @@
     window.cacheReportData = {}; //缓存一些数据
     var appRouter = new Router();
     Backbone.history.start();
-
+    window.appRouter= appRouter;
 
 })(window);

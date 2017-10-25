@@ -193,6 +193,7 @@
                     'empId': (map.empId === undefined ? undefined : map.empId),
                     'customerId': (map.customerId === undefined ? undefined : map.customerId),
                     'storeId': (map.storeId === undefined ? undefined : map.storeId),
+                    'end': (map.end === undefined ? undefined : map.end),
                     'keyWord': ''
                 }
             },
@@ -1107,7 +1108,8 @@
                         organizationId: (map.organizationId === undefined ? '' : map.organizationId)
                     }],
                     keyWord: "",
-                    month: (map.start === undefined ? thisMonth : map.start)
+                    month: (map.start === undefined ? thisMonth : map.start),
+                    // categoryId:''// 品类id
                 }
             },
             summary: {
@@ -1132,7 +1134,8 @@
                     organizationId: (map.organizationId === undefined ? '' : map.organizationId),
                     productId: (map.productId === undefined ? '' : map.productId),
                     month: (map.start === undefined || map.start === 'undefined' ? thisMonth : map.start),
-                    keyWord: ""
+                    keyWord: "",
+                    
                 }
             },
             summary: {
@@ -1158,7 +1161,8 @@
                     }],
                     keyWord: "",
                     month: (map.start === undefined ? thisMonth : map.start),
-                    houseId: null
+                    houseId: null,
+                    categoryId:''
                 }
             },
             summary: {
@@ -1184,7 +1188,8 @@
                     organizationId: (map.organizationId === undefined ? '' : map.organizationId),
                     productId: (map.productId === undefined ? '' : map.productId),
                     month: (map.start === undefined || map.start === 'undefined' ? thisMonth : map.start),
-                    keyWord: ""
+                    keyWord: "",
+                    categoryId:''
                 }
             },
             summary: {
@@ -1247,6 +1252,7 @@
             searchConfig: {
                 showTime: true,
                 showKeyWord: true,
+                showStartTime:false,
                 time: 'today',
                 keyWord: ['客户名称']
             },
