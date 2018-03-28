@@ -1016,6 +1016,7 @@
                     "storeId": (map.storeId === undefined ? '' : map.storeId),
                     "start": time.startTime,
                     "end": time.endTime,
+                    id:null
                 }
             },
             summary: {
@@ -1260,9 +1261,35 @@
                 text: noteText
             }
         },
+        reportGift: { // 赠送统计
+            url: uri + 'api/doReport/reportGift',
+            body: {
+                data: {
+                    "storeId": (map.storeId === undefined ? '' : map.storeId),
+                    "brandId": (map.brandId === undefined ? '' : map.brandId),
+                    'start': (map.start === undefined ? time.startTime : map.start),
+                    'end': (map.end === undefined ? time.endTime : map.end),
+                    "keyWord": ""
+                }
+            },
+            summary: {
+                key: ['赠送总额','数量'],
+                value: ['giftMoney', 'orderNum']
+            },
+            searchConfig: {
+                showTime: true,
+                showKeyWord: true,
+                showStartTime:true,
+                time: 'week',
+                keyWord: ['客户','单号','产品','员工']
+            },
+            note: {
+                text: noteText
+            }
+        },
 
     };
-    initTime(api[api['tpl']].searchConfig.time);
+    api[api['tpl']] && initTime(api[api['tpl']].searchConfig.time);
     window.reportApi = api;
     window.api_uri = uri;
 })(window);

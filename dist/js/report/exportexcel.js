@@ -11,7 +11,24 @@ $(function () {
     }
     if (!(ua.indexOf('ipad') > 0 || ua.indexOf('iphone') > 0 || ua.indexOf('android') > 0)) {
         $("#exportexcel").css("display", "block");
-        $("#exportexcel").bind("click", function () {
+        var limit_count = 0;
+        var color_flag = function(e){
+            var c = !window['limit'] ? '#ff6500' :'inherit';
+            var ee = e ? $(e) : $('.description .note i')
+            ee.find('i').css('color',c);
+        }
+        $('.top-nav').bind('click','.description .note',function(e){
+            e.stopPropagation();
+            if($(e.target).hasClass('note')){
+                limit_count++;
+                window['limit'] = limit_count%2 != 0 ? false : true;
+                color_flag(e.target);
+            }
+        })
+        color_flag();
+        $("#exportexcel").bind("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
             var path = new Path();
             var uri = path.getUri('charts');
             var map = path.paraMap(window.location.href);
@@ -169,12 +186,16 @@ $(function () {
                     type = 33;
                     filename = '客户临时转店消费记录';
                     break;
-                case 'reportStoreCouponsConsumeDetail':
+                    case 'reportStoreCouponsConsumeDetail':
                     type = 34;
                     if (map.organizationId === undefined) {
                         map.organizationId = map.storeId;
                     }
                     filename = '门店体验券消耗详情';
+                    break;
+                case 'reportGift':
+                    type = 37;
+                    filename = '增送报表';
                     break;
                 default:
                     type = 0;
@@ -209,7 +230,8 @@ $(function () {
                 'reportDto': reportDto
             }
             var priod = eher_util.getDateTime($('.endTime').val()) - eher_util.getDateTime($('.startTime').val());
-            var day_time = 1 * 24 * 60 * 60 * 1000;
+            var day_time = 86400000;// 一天
+            day_time = window.limit === false ? day_time * 100 : day_time;
             if( (priod / day_time)  > 93 ){
                 alert('您导出的报表时间范围超过了3个月！');
                 return;
@@ -220,6 +242,7 @@ $(function () {
                 var url = uri + 'export_excel.do';
                 if (window.isExport) return;
                 window.isExport = true;
+                // url = 'http://120.24.74.199:9001/report/export_excel.do';
                 $('#exportexcel').attr('disabled', true).css('opacity', 0.4).text('处理中...');
                 loadData(url, data, function (result) {
 
@@ -231,16 +254,19 @@ $(function () {
                     eher_util.write_excle(result.data, '#' + tpl + '-tpl', filename);
                     window.excle = false;
                     $('#exportexcel').attr('disabled', false).css('opacity', 1).text('导出EXCEL');
+                    window.limit = true;
                 }, function (error) {
                     alert('导出失败，请重试');
                     window.excle = false;
                     window.isExport = false;
                     $('#exportexcel').attr('disabled', false).css('opacity', 1).text('导出EXCEL');
+                    window.limit = true;
                 })
             }
             else {
                 createForm(uri + 'export_excel.do', data);
             }
+            return false;
         })
     }
 });
@@ -318,6 +344,32 @@ eher_util.prototype.write_excle = function (out_list, tpl_id, filename) {
     var div = document.createElement('div');
     div.innerHTML = html;
     var table_excel = div.querySelector('table');
+
+    function handleSumExcle(){// 报表添加总计行
+        var $tr = $(table_excel).find('tbody').find('tr').first().clone();
+        if($tr.find('td').length < 2){
+            return;
+        }
+        var obj = {};
+        $('.description').find('[data-key]').map(function(index,el){
+           obj[$(el).data('key')] = $(el).data('value');
+        })
+        var flag = false;
+        $tr.find('td').map(function(index,el){
+            $(el).attr('rowspan','1');
+            var key = $(el).data('key');
+            if(obj.hasOwnProperty(key)){
+                $(el).text(obj[key]);
+                flag = true;
+            }else if(index === 0){
+                $(el).text('总计')
+            }else{
+                $(el).text('')
+            } 
+        })
+        flag && $(table_excel).append($tr);
+    }
+    handleSumExcle();
     var self = this;
     function down(dom) {
         var type = 'xlsx';

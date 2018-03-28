@@ -640,6 +640,36 @@
             'tap tbody tr': 'showDetail',
             'tap thead .sortable': 'sortField',
         },
+        beforemounted: function(obj) {
+            var body = reportApi[reportApi.tpl].body;
+            var init_type = function(types) {
+                var t = '<option class="option" value="null">全部</option>';
+                types.data.forEach(function(el, index) {
+                    t += '<option class="option" value="' + el.id + '" '+(body.data.id == el.id ? 'selected' : '')+'>' + el.name + '</option>';
+                })
+                $('#store').html('').append(t);
+                $('.store-select').show();
+                document.getElementById('store').onchange = function() {
+                    var values = Array.prototype.slice.call(this.selectedOptions, 0).map(function(v, i, a) {
+                        return v.value;
+                    });
+                    // alert( JSON.stringify( values));
+                    var ii = values.indexOf('null');
+                    if (values.length >= 1 && ii != -1) {
+                        values.length = 0;
+                    }
+                    if (!values) { values.length = 0; }
+                    
+                    body.data.id = values.length ? values[0] : null;
+                }
+            } 
+            appRouter.post('/api/doReport/listCustomerSource',{storeId:body.data.storeId})
+            .then(function(e){
+                if(e.retCode === '000000'){
+                    init_type(e);
+                }
+            }) 
+        },
         showDetail: function(e) {
             if (e.currentTarget.tagName.toLowerCase() == 'tr') {
                 var id = $(e.currentTarget).data('id');
@@ -649,7 +679,7 @@
                 var start = $('.startTime').val();
                 var end = $('.endTime').val();
                 var name = $(e.currentTarget).data('name');
-                var hash = 'storeId=' + reportApi.queryString.storeId + '&tpl=reportCustomer&id=' + id + '&start=' + start + '&end' + end;
+                var hash = 'storeId=' + reportApi.queryString.storeId + '&tpl=reportCustomer&id=' + id + '&start=' + start + '&end=' + end;
                 var href = window.location.href.substring(0, window.location.href.indexOf('?')) + '?' + hash;
                 if (!device().isMobile) {
                     window.location.href = href;
@@ -952,6 +982,10 @@
 
         }
     });
+
+    var reportGiftView = BaseView.extend({ // 赠送
+        template: _.template($('#reportGift-tpl').html()),
+    });
     var viewList = [{ // 员工 列表
             name: 'reportEmp',
             view: StaffView
@@ -1095,6 +1129,10 @@
         }, { // 客户欠款时间统计
             name: 'customerArrearByDate',
             view: customerArrearByDateView
+        },
+        { // 客户欠款时间统计
+            name: 'reportGift',
+            view: reportGiftView
         }
 
     ];
@@ -1279,6 +1317,7 @@
                     }
                     list.push({
                         name: key[index],
+                        key:el,
                         value: isNaN(t) ? t : (t - 0)
                     });
                 } else if (reportApi.tpl === 'reportRefund' && cacheReportData.reportRefund) { // 退款报表处理
@@ -1290,12 +1329,14 @@
                     }
                     list.push({
                         name: key[index],
+                        key:el,
                         value: isNaN(t) ? t : (t - 0)
                     });
                 } else {
                     list.push({
                         name: key[index],
-                        value: temp[el]
+                        value: temp[el],
+                        key:el
                     });
                 }
             });
@@ -1352,6 +1393,7 @@
         },
         search: function(e) {
             e.preventDefault();
+            e.stopPropagation();
             var searchKey = $('.searchKey').val().trim() || undefined;
             var sortItem = $('.currentItem').text();
             if(!$('.categroy-body').hasClass('none')){
@@ -1405,8 +1447,6 @@
             }
         },
         tableView: function(tpl, index, data) {
-
-
             var ops = {
                 model: data,
                 currentIndex: (index ? index : 1)

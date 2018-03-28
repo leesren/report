@@ -771,6 +771,7 @@
                 <tr class="head-nodata">
                     <th class="fixed-coloum-header">姓名</th>
                     <th>编号</th>
+                    <th>会员类型</th>
                     <th class="sortable" data-sort="rechargeNum">充值次数</th>
                     <th class="sortable" data-sort="rechargeMoney">充值金额业绩</th>
                     <th class="sortable" data-sort="balanceUse">充值金额消耗业绩</th>
@@ -784,6 +785,7 @@
                     <th class="sortable" data-sort="arriveCount">到店天数</th>
                     <th class="sortable" data-sort="frequency">频次</th>
                     <th>所属门店</th>
+                    <th>所属顾问</th>
                     <th>注册日期</th>
                     <th>备注</th>
                 </tr>
@@ -794,8 +796,11 @@
                         <td class="text first-coloum-flag">
                             <%=el.csutomerName%>
                         </td>
-                        <td class=" text">
+                        <td class="text">
                             <%=el.memberNo%>
+                        </td>
+                        <td class="text">
+                            <%=el.customerType%>
                         </td>
                         <td class="num">
                             <%=miliFormat(((el.rechargeNum-0).toFixed(2)-0))%>
@@ -835,6 +840,9 @@
                         </td>
                         <td class="text">
                             <%=el.storeName%>
+                        </td>
+                        <td class="text">
+                            <%=el.advisor%>
                         </td>
                         <td class="text">
                             <%=el.registerDate%>
@@ -1168,6 +1176,7 @@
                 <thead class="multi-header">
                     <tr>
                         <th rowspan="2" class="fixed-coloum-header">客户</th>
+                        <th rowspan="2">客户编号</th>
                         <!--<% 
                         if(map.organizationId) {
                         %>
@@ -1212,6 +1221,9 @@
                             <td rowspan="<%=rowspan%>" class="text first-coloum-flag">
                                 <%=el.customerName%>
                             </td>
+                            <td rowspan="<%=rowspan%>">
+                                <%=el.customerNo%>
+                            </td>
                             <td rowspan="<%=rowspan%>" class="text"><span style="vertical-align:middle"><%=el.date%></span></td>
 
                             <td rowspan="<%=rowspan%>" class="text">
@@ -1237,11 +1249,11 @@
                                 <%=el.useCard%>
                             </td>
 
-                            <td rowspan="<%=rowspan%>" class="num">
+                            <td rowspan="<%=rowspan%>" class="num" data-key="sumConsume">
                                 <%=miliFormat(((el.storeConsume-0).toFixed(2)-0))%>
                             </td>
 
-                            <td rowspan="<%=rowspan%>" class="num">
+                            <td rowspan="<%=rowspan%>" class="num" data-key="sumGiftConsume">
                                 <%=miliFormat(((el.giftConsume-0).toFixed(2)-0))%>
                             </td>
                             <td class="text"><span style="vertical-align: middle;"><%=emp.empName%></span>
@@ -1262,13 +1274,13 @@
                             <td class="text">
                                 <%=emp.postType%>
                             </td>
-                            <td class="num">
+                            <td class="num" data-key="sumCA">
                                 <%=(emp.consumeAch=="*"?emp.consumeAch:miliFormat(((emp.consumeAch-0).toFixed(2)-0)))%>
                             </td>
-                            <td class="num">
+                            <td class="num" data-key="sumCC">
                                 <%=(emp.commission=="*"?emp.commission:miliFormat(((emp.commission-0).toFixed(2)-0)))%>
                             </td>
-                            <td class="num">
+                            <td class="num" data-key="sumEx">
                                 <%=(emp.extrawage=="*"?emp.extrawage:miliFormat(((emp.extrawage-0).toFixed(2)-0)))%>
                             </td>
                             <td class="text" rowspan="<%=rowspan%>">
@@ -1339,13 +1351,13 @@
                                 <td class="text">
                                     <%=emp.postType%>
                                 </td>
-                                <td class="num">
+                                <td class="num"  data-key="sumCA">
                                     <%=(emp.consumeAch=="*"?emp.consumeAch:miliFormat(((emp.consumeAch-0).toFixed(2)-0)))%>
                                 </td>
-                                <td class="num">
+                                <td class="num" data-key="sumCC">
                                     <%=(emp.commission=="*"?emp.commission:miliFormat(((emp.commission-0).toFixed(2)-0)))%>
                                 </td>
-                                <td class="num">
+                                <td class="num" data-key="sumEx">
                                     <%=(emp.extrawage=="*"?emp.extrawage:miliFormat(((emp.extrawage-0).toFixed(2)-0)))%>
                                 </td>
                             </tr>
@@ -1357,7 +1369,10 @@
     <!--start销售明细-->
     <script type="text/template" id="reportMarketDetail-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
-            <% var path = new Path();var map = path.paraMap(window.location.href);var headerList= eval('(' + window.localStorage.getItem("businessHeader") + ')');%>
+            <% var path = new Path();
+               var map = path.paraMap(window.location.href);
+               var headerList = eval('(' + window.localStorage.getItem("businessHeader") + ')');
+            %>
                 <thead class="multi-header">
                     <tr>
                         <th rowspan="2" class="fixed-coloum-header">客户</th>
@@ -1368,6 +1383,7 @@
                         <%   
                         }
                     %>-->
+                        <th rowspan="2">客户编号</th>
                         <th rowspan="2">日期</th>
                         <th rowspan="2">客户类型</th>
                         <th rowspan="2">项目</th>
@@ -1403,16 +1419,15 @@
                     <th>京东支付</th>
                     <th>招联支付</th>
                     <th>其他支付</th>-->
-                        <% headerList.map(function(el,index){%>
-                            <th>
-                                <%=el.name%>
-                            </th>
-                            <%});%>
-
-                                <th>人员</th>
-                                <th>职位</th>
-                                <th>销售业绩</th>
-                                <th>销售提成</th>
+                            <% headerList.map(function(el,index){%>
+                                <th>
+                                    <%=el.name%>
+                                </th>
+                            <%});%> 
+                            <th>人员</th>
+                            <th>职位</th>
+                            <th>销售业绩</th>
+                            <th>销售提成</th>
                     </tr>
                 </thead>
                 <tbody id="tb" class="tbody">
@@ -1436,20 +1451,12 @@
                         <tr class="<%=experienceCard%>">
                             <td rowspan="<%=rowspan%>" class="text first-coloum-flag">
                                 <%=el.customerName%>
+                            </td> 
+                            <td rowspan="<%= rowspan %>"><%=el.customerNo %></td>
+                            <td rowspan="<%= rowspan %>">
+                                <%=el.date %>
                             </td>
-                            <!--<% 
-                            if(map.organizationId) {
-                            %>
-                            <td rowspan="<%=rowspan%>"> 
-                                <%=el.storeName%>
-                            </td>
-                            <%   
-                            }
-                        %>-->
-                            <td rowspan="<%=rowspan%>">
-                                <%=el.date%>
-                            </td>
-                            <td rowspan="<%=rowspan%>" class="text">
+                            <td rowspan="<%= rowspan %>" class="text">
                                 <%=el.customerType%>
                             </td>
                             <td class="text" rowspan="<%=combine1%>">
@@ -1465,58 +1472,19 @@
                             <td class="num" rowspan="<%=combine1%>">
                                 <%=(items?miliFormat(((items.price-0).toFixed(2)-0)):'')%>
                             </td>
-                            <td rowspan="<%=rowspan%>" class="num">
+                            <td rowspan="<%=rowspan%>" class="num" data-key="sumRec">
                                 <%=miliFormat(((el.realRec-0).toFixed(2)-0))%>
-                            </td>
-
-                            <!--<td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.cashPay-0).toFixed(2)-0))%>
-                        </td>
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.unionPay-0).toFixed(2)-0))%>
-                        </td>
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.creditCardPay-0).toFixed(2)-0))%>
-                        </td>
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.balancePay-0).toFixed(2)-0))%>
-                        </td>
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.productPay-0).toFixed(2)-0))%>
-                        </td>
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.gift-0).toFixed(2)-0))%>
-                        </td>
-
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.bAIDUPAY-0).toFixed(2)-0))%>
-                        </td>
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.qQPAY-0).toFixed(2)-0))%>
-                        </td>
-                        
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.aliPay-0).toFixed(2)-0))%>
-                        </td>
-                            
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.wxPay-0).toFixed(2)-0))%>
-                        </td>
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.jdPay-0).toFixed(2)-0))%>
-                        </td>
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.zlPay-0).toFixed(2)-0))%>
-                        </td>
-                        <td rowspan="<%=rowspan%>" class="num">
-                            <%=miliFormat(((el.otherPay-0).toFixed(2)-0))%>
-                        </td>-->
-                            <%el.pmList.map(function(e,index){%>
-                                <td rowspan="<%=rowspan%>" class="num">
+                            </td> 
+                            <%el.pmList.map(function(e,index){
+                                // 处理现金、实收和银联的总额对应关系 cashPay -> sumCash , unionPay -> sumUnion，realRec -> sumRec
+                                var tcode = e.code;
+                                if(e.code == 'cashPay'){tcode = 'sumCash'}
+                                if(e.code == 'unionPay'){tcode = 'sumUnion'}
+                                %>
+                                <td rowspan="<%=rowspan%>" class="num" data-key="<%=tcode%>">
                                     <%=miliFormat(((e.amount-0).toFixed(2)-0))%>
                                 </td>
                                 <%});%>
-
                                     <td rowspan="<%=rowspan%>" class="num">
                                         <%=miliFormat(((el.gift-0).toFixed(2)-0))%>
                                     </td>
@@ -1529,10 +1497,10 @@
                                     <td class="text" rowspan="<%=combine2%>">
                                         <%=(emp?emp.postType:'')%>
                                     </td>
-                                    <td class="num" rowspan="<%=combine2%>">
+                                    <td class="num" rowspan="<%=combine2%>" data-key="sumSales">
                                         <%=(emp&&emp.empSales!='*'?miliFormat(emp.empSales-0):emp.empSales)%>
                                     </td>
-                                    <td class="num" rowspan="<%=combine2%>">
+                                    <td class="num" rowspan="<%=combine2%>" data-key="scSum">
                                         <%=(emp&&emp.empSaleCommission!='*'?miliFormat(emp.empSaleCommission-0):emp.empSaleCommission)%>
                                     </td>
                                     <td class="text experienceCard" rowspan="<%=rowspan%>">
@@ -1557,17 +1525,20 @@
                                                 <%
                                      }else if(el.isFix == '2'){
                                         %><span>线下卡补单</span>
-                                                    <%
-                                     }
-                                %>
+                                        <%
+                                        }
+                                        %>
                                     </td>
                                     <td class="text" rowspan="<%=rowspan%>">-</td>
                         </tr>
-                        <%var count=1;if(len1>=len2){el.itemList.map(function(item,index){
-                        if(index===0)return;
-                        var emps=el.marketEmpList[count];
-                        var empSales;if(emps){
-                            empSales=(emps.empSales!='*'?miliFormat(((emps.empSales-0).toFixed(2)-0)):emps.empSales);empSaleCommission=(emps.empSaleCommission!='*'?miliFormat(((emps.empSaleCommission-0).toFixed(2)-0)):emps.empSaleCommission);}%>
+                        <%var count=1;
+                        if(len1>=len2){
+                            el.itemList.map(function(item,index){
+                            if(index===0)return;
+                            var emps=el.marketEmpList[count];
+                             var empSales;if(emps){
+                                empSales=(emps.empSales!='*'?miliFormat(((emps.empSales-0).toFixed(2)-0)):emps.empSales);
+                                empSaleCommission=(emps.empSaleCommission!='*'?miliFormat(((emps.empSaleCommission-0).toFixed(2)-0)):emps.empSaleCommission);}%>
                             <tr class="<%=experienceCard%>">
                                 <td class="text">
                                     <%=(item.itemName)%>
@@ -1581,8 +1552,9 @@
                                 <td class="num">
                                     <%=miliFormat(((item.price-0).toFixed(2)-0))%>
                                 </td>
-                                <%if(emps&&(indexing[count].index===index)){
-                                var v=indexing[count].value;
+                                <%
+                                    if( emps && (indexing[count].index===index)){
+                                    var v=indexing[count].value;
                                 %>
                                     <td class="text" rowspan="<%=v%>">
                                         <%=(emps.empName)%>
@@ -1599,18 +1571,20 @@
                                     <%count++;}%>
                             </tr>
                             <%});}else{
-                            count=1;   
-                            el.marketEmpList.map(function(emps,index){
-                            if(index===0)return;
-                            var item=el.itemList[count];
-                        %>
+                                count=1;   
+                                el.marketEmpList.map(function(emps,index){
+                                if(index === 0)return;
+                                var item = el.itemList[count];
+                            %>
                                 <tr class="<%=experienceCard%>">
-                                    <%if(item&&(indexing[count].index===index)){
-                                    var v=indexing[count].value;%>
+                                    <%
+                                        if( item && (indexing[count].index===index)){
+                                            var v=indexing[count].value;
+                                    %>
                                         <td class="text" rowspan="<%=v%>">
                                             <%=(item.itemName)%>
                                         </td>
-                                        <td class="text">
+                                        <td class="text" rowspan="<%=v%>">
                                             <%=(item.category)%>
                                         </td>
                                         <td class="num" rowspan="<%=v%>">
@@ -1619,17 +1593,19 @@
                                         <td class="num" rowspan="<%=v%>">
                                             <%=(item?((item.price-0).toFixed(2)-0).toLocaleString():'')%>
                                         </td>
-                                        <%count++;}%>
+                                        <%
+                                            count++;
+                                        }%>
                                             <td class="text">
                                                 <%=(emps.empName)%>
                                             </td>
                                             <td class="text">
                                                 <%=(emps.postType)%>
                                             </td>
-                                            <td class="num">
+                                            <td class="num" data-key="sumSales">
                                                 <%=(emps.empSales!="*"?miliFormat(((emps.empSales-0).toFixed(2)-0)):emps.empSales)%>
                                             </td>
-                                            <td class="num">
+                                            <td class="num" data-key="scSum">
                                                 <%=(emps.empSaleCommission!="*"?miliFormat(((emps.empSaleCommission-0).toFixed(2)-0)):emps.empSaleCommission)%>
                                             </td>
                                 </tr>
@@ -1637,6 +1613,7 @@
                 </tbody>
         </table>
     </script>
+
     <!--end销售明细-->
     <!--start订单明细-->
     <script type="text/template" id="reportMarketDetailConsume-tpl">
@@ -1851,6 +1828,7 @@
                         <th>卡项</th>
                         <th>单次体验</th>
                         <th>商品</th>
+
                         <th>耗卡</th>
                         <th>现金体验</th>
                         <th>商品</th>
@@ -1879,67 +1857,76 @@
             <tbody id="tb" class="tbody">
                 <%data.map(function(el,index){%>
                     <tr>
-                        <td class="text first-coloum-flag">
+                        <td class="text first-coloum-flag"><!-- 日期 -->
                             <%=el.date%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="项目量"> 
                             <%=el.productNum%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="到访人次">
                             <%=el.pNumber%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="新增新客">
                             <%=el.newNumber%>
                         </td>
-                        <td class="num">
+
+
+                        <td class="num" v-label="现金">
                             <%=miliFormat(((el.cashPay-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="赠送">
                             <%=miliFormat(((el.presentPay-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="总计"><!-- 总计 -->
                             <%=miliFormat(((el.payTotal-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+
+
+                        <td class="num" v-label="充值">
                             <%=miliFormat(((el.rechargeAmount-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="卡项">
                             <%=miliFormat(((el.cardAmount-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="单次体验">
                             <%=miliFormat(((el.serviceAmount-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="商品">
                             <%=miliFormat(((el.cosmeticsAmount-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+
+
+                        <td class="num" v-label="耗卡"> 
                             <%=miliFormat(((el.cardConsume-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="现金体验">
                             <%=miliFormat(((el.experienceConsume-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="商品">
                             <%=miliFormat(((el.cosmeticsConsume-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+
+                        <td class="num" v-label="销售合计"> 
                             <%=miliFormat(((el.totalStroeSales-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="消耗合计">
                             <%=miliFormat(((el.totalStoreConsume-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+
+
+                        <td class="num" v-label="充值">
                             <%=miliFormat(((el.rechargeGift-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="卡项">
                             <%=miliFormat(((el.cardGift-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="服务项目">
                             <%=miliFormat(((el.serviceGift-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="商品">
                             <%=miliFormat(((el.cosmeticsGift-0).toFixed(2)-0))%>
                         </td>
-                        <td class="num">
+                        <td class="num" v-label="合计">
                             <%=miliFormat(((el.giftSum-0).toFixed(2)-0))%>
                         </td>
 
@@ -1979,6 +1966,9 @@
         </table>
     </script>
     <!--end营业报表-->
+
+
+
     <!--start分类汇总-->
     <script type="text/template" id="reportCategory-tpl">
         <table id="fixTable" class="table table-bordered p4-table">
@@ -2031,6 +2021,46 @@
         </table>
     </script>
     <!--end分类汇总-->
+    <!--start分类详情汇总-->
+    <script type="text/template" id="reportNextCategory-tpl">
+        <table id="fixTable" class="table table-bordered p4-table">
+            <thead>
+                <tr>
+                    <th>名称</th>
+                    <th class="sortable" data-sort="sales">销售业绩</th>
+                    <th class="sortable" data-sort="consumes">消耗业绩</th>
+                    <th>备注</th> 
+                </tr>
+            </thead>
+            <tbody id="tb" class="tbody">
+                <%data.map(function(el,index){%>
+                    <%
+                                if(el.classType == '1'){
+                                        %>
+                        <tr data-id="<%=el.id%>" data-name="<%=el.name%>" style="cursor: pointer;">
+                            <%
+                                }else{
+                                        %>
+                                <tr>
+                                    <%
+                                }
+                      %>
+                                        <td class="text">
+                                            <%=el.name%>
+                                        </td>
+                                        <td class="num">
+                                            <%=miliFormat((el.sales-0))%>
+                                        </td>
+                                        <td class="num">
+                                            <%=miliFormat((el.consumes-0))%>
+                                        </td> 
+                                        <td class="text">-</td> 
+                                </tr>
+                                <%});%>
+            </tbody>
+        </table>
+    </script>
+    <!--end分类详情汇总-->
 
 
     <!--start客户项卡项负债-->
@@ -3533,6 +3563,76 @@
     </script>
     <!--end客户欠款统计-->
 
+
+    <!--start赠送统计-->
+    <script type="text/template" id="reportGift-tpl">
+        <table id="fixTable" class="table table-bordered p4-table">
+            <thead>
+                <tr class="multi-header">
+                    <th rowspan="2" class="fixed-coloum-header">客户姓名</th>
+                    <th rowspan="2">客户编号</th>
+                    <th rowspan="2">客户类型</th>
+                    <th rowspan="2">日期</th>
+                    <th rowspan="2">产品</th>
+                    <th rowspan="2">产品分类</th>
+                    <th rowspan="2" class="sortable" data-sort="orderNum" >数量</th>
+                    <th rowspan="2" class="sortable" data-sort="price">单价</th>
+                    <th rowspan="2" class="sortable" data-sort="giftMoney">赠送金额</th>
+                    <th colspan="4">参与员工提成及业绩</th>
+                    <th rowspan="2">门店</th>
+                    <th rowspan="2">单号</th>
+                </tr>
+                <tr>
+                    <th>员工姓名</th>
+                    <th>职位</th>
+                    <th>销售业绩</th>
+                    <th>销售提成</th>
+                </tr>
+            </thead>
+            <tbody id="tb" class="tbody">
+                <%data.map(function(el,index){
+                    var v = el.empList[0] || {};
+                    var len = el.empList.length === 0 ? 1 : el.empList.length;
+                    var empList = el.empList.slice(1);
+                %> 
+                    <tr>
+                        <td rowspan="<%=len%>" class="first-coloum-flag"><%=el.customerName%></td>
+                        <td rowspan="<%=len%>"><%=el.customerNo%></td>
+                        <td rowspan="<%=len%>"><%=el.customerType%></td>
+                        <td rowspan="<%=len%>"><%=el.date%></td>
+                        <td rowspan="<%=len%>" title="<%=el.productName%>"><%=el.productName%></td>
+                        <td rowspan="<%=len%>"><%=el.categoryName%></td>
+                        <td rowspan="<%=len%>" class="num"><%=el.orderNum%></td>
+                        <td rowspan="<%=len%>" class="num"><%=el.price%></td>
+                        <td rowspan="<%=len%>" class="num"><%=el.giftMoney%></td>
+
+                        <td><%=v.empName || '-'%></td>
+                        <td><%=v.postName ||'-'%></td>
+                        <td class="num"><%=v.saleAmount ||'-'%></td>
+                        <td class="num"><%=v.saleCommission || '-'%></td>
+                        <td rowspan="<%=len%>"><%=el.storeName%></td>
+
+                        <td rowspan="<%=len%>" title="<%=el.orderCode%>"><%=el.orderCode%></td>
+                    </tr> 
+                    <%
+                        empList.map(function(it,i){
+                        %>
+                            <tr>
+                                <td><%=it.empName%></td>
+                                <td><%=it.postName%></td>
+                                <td class="num"><%=it.saleAmount%></td>
+                                <td class="num"><%=it.saleCommission%></td>
+                            </tr>
+                        <%
+                        }) 
+                    %>  
+                    <%});
+                    %>
+            </tbody>
+        </table>
+    </script>
+    <!--end赠送统计-->
+
     <script type="text/template" id="keywords-tpl">
         <div class="dropdown">筛选:<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><em class="currentItem"><%=keyWords[0]%></em></button>
             <ul class="dropdown-menu">
@@ -3581,7 +3681,7 @@
     <script type="text/template" id="summary-tpl">
         <%list.map(function(el,index){%>
             <label>
-             <%=el.name%>：<span class="sale"><%= isNaN(el.value ) ? el.value : miliFormat(((el.value-0).toFixed(2)-0)) %></span></label>
+             <%=el.name%>：<span class="sale" data-key="<%=el.key%>" data-value="<%=el.value%>"><%= isNaN(el.value ) ? el.value : miliFormat(((el.value-0).toFixed(2)-0)) %></span></label>
             <%});%>
                 <span class="note"><i>!</i><%=note%></span>
     </script>

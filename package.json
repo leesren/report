@@ -4,7 +4,8 @@
   "description": "sada",
   "main": "da",
   "scripts": {
-    "test": "ad"
+    "test": "ad",
+    "start":"gulp"
   },
   "repository": {
     "type": "git",
